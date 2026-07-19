@@ -1,0 +1,274 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Vigor Health - Profile Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Space+Grotesk:wght@600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-header {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f7faf9",
+                        "tertiary-container": "#00827f",
+                        "primary-container": "#db3237",
+                        "outline-variant": "#e4beba",
+                        "inverse-primary": "#ffb3ae",
+                        "on-surface": "#181c1c",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#ffb3ae",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#5af9f3",
+                        "surface-dim": "#d7dbda",
+                        "surface-container-low": "#f1f4f3",
+                        "on-secondary-fixed": "#161d1f",
+                        "inverse-on-surface": "#eef1f0",
+                        "on-primary-fixed-variant": "#930014",
+                        "on-secondary-fixed-variant": "#41484a",
+                        "secondary-fixed": "#dde4e6",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#ba1724",
+                        "surface-container-high": "#e6e9e8",
+                        "surface-variant": "#e0e3e2",
+                        "on-tertiary-fixed-variant": "#00504e",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#c1c8ca",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f7faf9",
+                        "secondary": "#586062",
+                        "surface-container": "#ebeeed",
+                        "inverse-surface": "#2d3131",
+                        "primary-fixed": "#ffdad7",
+                        "on-primary-container": "#fffbff",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#dae1e3",
+                        "tertiary-fixed-dim": "#2edcd7",
+                        "surface-container-highest": "#e0e3e2",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#00201f",
+                        "on-surface-variant": "#5b403e",
+                        "on-background": "#181c1c",
+                        "tertiary": "#006764",
+                        "primary": "#b71422",
+                        "surface": "#f7faf9",
+                        "on-secondary-container": "#5d6466",
+                        "on-tertiary-container": "#f3fffd",
+                        "outline": "#8f6f6d",
+                        "on-primary-fixed": "#410004"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "32px",
+                        "sm": "16px",
+                        "xs": "8px",
+                        "gutter": "16px",
+                        "container-margin": "20px",
+                        "xl": "48px",
+                        "md": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Space Grotesk"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-metrics": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-metrics": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm flex justify-between items-center px-container-margin h-14">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95 transition-transform">arrow_back</span>
+<h1 class="font-display-metrics text-headline-lg-mobile text-primary">Settings</h1>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary-fixed">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a healthy young athlete with short dark hair, smiling confidently into the camera. The background is a clean, minimalist fitness studio with soft ambient lighting. The color palette emphasizes clean whites and vibrant red accents, maintaining a high-contrast corporate modern look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkW7epNg_R9LiBnPlTnVbCdoIYg0U4gZSj-BDzq2-SGnnGLsaWh6TyWkC5t2z9yf8_bUuSSfjlDFQiUrZhPZiUZ-m3LAkjiwULvcsbLk9W2E8y58NnXSI5sUYUJl5JpqolZIbZi3qrP7UhJcwIy7jikpNOAUcH8b7SQkFXtrvRCnn_iWCSiCUIFr9IzN_NbAJ4SvUWl_AjsNLXVe8xwBoE1B765aHXtvNAlBTu9rCDvk3pAYUfeU0B">
+</div>
+</header>
+<main class="mt-20 px-container-margin space-y-md">
+<!-- Profile Picture Section -->
+<section class="flex flex-col items-center justify-center py-md space-y-sm">
+<div class="relative group">
+<div class="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A minimalist profile avatar placeholder against a soft grey background. The image is clean and modern, following a corporate aesthetic with high-key lighting. The style is sharp and focused, symbolizing personal identity within a health and fitness context." id="profile-preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLo5egX8WACIbJglrGm1qAg-b4i1GsIEvTnADZLrmNheJqiYnucQ5PF9wJzV5iZvH9wAyJbr1FJLlNVUBDl3xSI49VeYn8w9TaWrdbEGzBt2hhxy5OjqJyrGsahVpnrDUEP-DzPEciGlnyD0Kpw9Zx0LRB5NCHWGJCJ3IC2E6l_1ckhE6lUyXKanAn8vfupjOyfG_wjiSR2tSk0aJpb-vkh1kId0osnjaKQ3zzskOq83vT9Blgwj8v">
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-md active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="text-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Alex Johnson</h2>
+<p class="font-body-sm text-body-sm text-secondary">alex.j@vigorhealth.com</p>
+</div>
+</section>
+<!-- Personal Information Card -->
+<div class="bg-surface-container-lowest border border-outline-variant p-sm rounded-xl space-y-sm">
+<h3 class="font-label-caps text-label-caps text-primary uppercase tracking-wider">Personal Information</h3>
+<div class="space-y-xs">
+<label class="font-body-sm text-body-sm text-on-surface-variant px-1" for="username">Username</label>
+<input class="w-full h-12 bg-surface-container-low border-none rounded-lg focus:ring-2 focus:ring-primary font-body-lg text-body-lg px-4 transition-all" id="username" placeholder="Enter username" type="text" value="AlexVigor88">
+</div>
+</div>
+<!-- Health Goals Card -->
+<div class="bg-surface-container-lowest border border-outline-variant p-sm rounded-xl space-y-sm">
+<div class="flex justify-between items-center">
+<h3 class="font-label-caps text-label-caps text-primary uppercase tracking-wider">Health Goals</h3>
+<span class="font-display-metrics text-headline-md text-primary" id="calorie-display">2,400 <span class="text-body-sm font-normal">kcal</span></span>
+</div>
+<div class="py-4">
+<input class="w-full h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary" id="calorie-slider" max="4000" min="1200" step="50" type="range" value="2400">
+<div class="flex justify-between mt-2 px-1">
+<span class="font-label-caps text-[10px] text-secondary">1,200 kcal</span>
+<span class="font-label-caps text-[10px] text-secondary">4,000 kcal</span>
+</div>
+</div>
+</div>
+<!-- Preferences List -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden divide-y divide-outline-variant">
+<!-- Notifications -->
+<button class="w-full flex items-center justify-between p-sm hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+<div class="text-left">
+<p class="font-headline-md text-body-lg text-on-surface">Notification Preferences</p>
+<p class="font-body-sm text-body-sm text-secondary">Smart alerts &amp; reminders</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<!-- Devices -->
+<button class="w-full flex items-center justify-between p-sm hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">match_case</span>
+</div>
+<div class="text-left">
+<p class="font-headline-md text-body-lg text-on-surface">Connected Devices</p>
+<p class="font-body-sm text-body-sm text-secondary">2 active devices linked</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<!-- Privacy -->
+<button class="w-full flex items-center justify-between p-sm hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<div class="text-left">
+<p class="font-headline-md text-body-lg text-on-surface">Privacy &amp; Security</p>
+<p class="font-body-sm text-body-sm text-secondary">Data sharing settings</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+<!-- Promotional/Info Section - Bento Style -->
+<div class="grid grid-cols-2 gap-sm">
+<div class="col-span-2 bg-primary-container text-on-primary-container p-sm rounded-xl flex items-center justify-between">
+<div>
+<h4 class="font-headline-md text-body-lg font-bold">Vigor Plus</h4>
+<p class="font-body-sm opacity-90">Unlock advanced analytics</p>
+</div>
+<span class="material-symbols-outlined text-4xl opacity-50">workspace_premium</span>
+</div>
+</div>
+<!-- Save Button -->
+<div class="pt-sm">
+<button class="w-full h-14 bg-primary text-white font-headline-md text-headline-md rounded-full shadow-lg active:scale-[0.98] transition-all hover:opacity-90 flex items-center justify-center gap-sm">
+                Save Changes
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface/90 dark:bg-surface-container-low/90 backdrop-blur-md rounded-t-xl border-t border-outline-variant shadow-lg">
+<div class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-colors cursor-pointer active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-colors cursor-pointer active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">fitness_center</span>
+<span class="font-label-caps text-label-caps">Workouts</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-colors cursor-pointer active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-label-caps text-label-caps">Nutrition</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-transform duration-200">
+<span class="material-symbols-outlined fill-icon">person</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</div>
+</nav>
+<script>
+        // Micro-interaction for Calorie Slider
+        const slider = document.getElementById('calorie-slider');
+        const display = document.getElementById('calorie-display');
+        
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value).toLocaleString();
+            display.innerHTML = `${val} <span class="text-body-sm font-normal">kcal</span>`;
+        });
+
+        // Simple button active states feedback
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const originalText = this.innerText;
+                if (originalText === 'Save Changes') {
+                    this.innerText = 'Updating...';
+                    this.classList.add('opacity-80');
+                    setTimeout(() => {
+                        this.innerText = 'Success!';
+                        this.classList.remove('bg-primary');
+                        this.classList.add('bg-tertiary-container');
+                        setTimeout(() => {
+                            this.innerText = 'Save Changes';
+                            this.classList.remove('bg-tertiary-container', 'opacity-80');
+                            this.classList.add('bg-primary');
+                        }, 2000);
+                    }, 1000);
+                }
+            });
+        });
+    </script>
+</body></html>

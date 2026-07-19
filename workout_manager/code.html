@@ -1,0 +1,355 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Vigor - Workout Routine Manager</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Space+Grotesk:wght@700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom transitions for exercise check-offs */
+        .exercise-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .exercise-card.completed {
+            opacity: 0.7;
+            background-color: #f1f4f3;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e4beba;
+            border-radius: 10px;
+        }
+    </style>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f7faf9",
+                      "tertiary-fixed-dim": "#2edcd7",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary": "#006764",
+                      "surface-variant": "#e0e3e2",
+                      "on-background": "#181c1c",
+                      "inverse-surface": "#2d3131",
+                      "surface-dim": "#d7dbda",
+                      "secondary-fixed": "#dde4e6",
+                      "surface": "#f7faf9",
+                      "primary-fixed": "#ffdad7",
+                      "primary": "#b71422",
+                      "secondary-container": "#dae1e3",
+                      "primary-fixed-dim": "#ffb3ae",
+                      "surface-container-highest": "#e0e3e2",
+                      "on-tertiary-fixed": "#00201f",
+                      "secondary-fixed-dim": "#c1c8ca",
+                      "on-secondary-fixed-variant": "#41484a",
+                      "on-surface-variant": "#5b403e",
+                      "on-tertiary-container": "#f3fffd",
+                      "error-container": "#ffdad6",
+                      "on-error-container": "#93000a",
+                      "surface-container-low": "#f1f4f3",
+                      "surface-container": "#ebeeed",
+                      "outline": "#8f6f6d",
+                      "background": "#f7faf9",
+                      "on-primary-fixed": "#410004",
+                      "secondary": "#586062",
+                      "primary-container": "#db3237",
+                      "on-secondary-container": "#5d6466",
+                      "surface-tint": "#ba1724",
+                      "on-primary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "outline-variant": "#e4beba",
+                      "on-primary-fixed-variant": "#930014",
+                      "inverse-primary": "#ffb3ae",
+                      "tertiary-container": "#00827f",
+                      "on-primary-container": "#fffbff",
+                      "on-error": "#ffffff",
+                      "surface-container-high": "#e6e9e8",
+                      "on-surface": "#181c1c",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#5af9f3",
+                      "on-secondary-fixed": "#161d1f",
+                      "inverse-on-surface": "#eef1f0",
+                      "on-tertiary-fixed-variant": "#00504e",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "4px",
+                      "sm": "16px",
+                      "md": "24px",
+                      "gutter": "16px",
+                      "xl": "48px",
+                      "xs": "8px",
+                      "container-margin": "20px",
+                      "lg": "32px"
+              },
+              "fontFamily": {
+                      "body-sm": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-metrics": ["Space Grotesk"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "label-caps": ["Space Grotesk"]
+              },
+              "fontSize": {
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "display-metrics": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "30px", "fontWeight": "700"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm h-14 flex justify-between items-center px-container-margin">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A close-up high-resolution portrait of a fit individual with a determined expression, lit by high-contrast studio lighting that emphasizes muscle definition. The background is a clean, minimalist gym setting with neutral tones and a subtle hint of vibrant red equipment. The overall aesthetic is professional, modern, and aligned with a premium corporate fitness brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe0TC30Lo-khnx4RrVDJvu__dzkQk5UFFrMEpfCaJIqfJlh5p-uaOeZNo_jKGcF9Wri4_Knid0lSt8pcVdJN5yzRvSa59BubpWf8tEgHIvQ9i25rhqpzc7TndgKkcFHGco-8xLXf2PUGCbp7WIfzB4-fZcbV7PA54RW2YErjWTICn2irPw7C-zzkS60i64RV6f5B-SsBpV1_90HZixAPjlSPCSs4DKapovBTwmACJSWXwd5Arzmbv5">
+</div>
+<h1 class="font-display-metrics text-headline-lg-mobile text-primary">Vigor</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-container-margin max-w-[1024px] mx-auto">
+<!-- Dashboard Header -->
+<section class="mb-lg">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile mb-xs">Workout Manager</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Manage your kinetic energy and stay disciplined.</p>
+</section>
+<!-- Tabbed Navigation -->
+<div class="flex bg-surface-container-low p-1 rounded-xl mb-md">
+<button class="flex-1 py-3 px-2 rounded-lg font-label-caps text-label-caps transition-all bg-primary-container text-on-primary-container" id="tab-weekly" onclick="switchTab('weekly')">
+                WEEKLY SCHEDULE
+            </button>
+<button class="flex-1 py-3 px-2 rounded-lg font-label-caps text-label-caps transition-all text-secondary" id="tab-morning" onclick="switchTab('morning')">
+                MORNING ROUTINE
+            </button>
+</div>
+<!-- Weekly Schedule View -->
+<div class="space-y-md" id="view-weekly">
+<!-- Header with Actions -->
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md">Today's Exercises</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Monday, Oct 23</p>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant text-primary hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="h-10 px-4 flex items-center gap-2 rounded-full bg-primary text-on-primary font-label-caps text-label-caps hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        ADD
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Exercise List -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Exercise Card 1 (Pending) -->
+<div class="exercise-card bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A sleek, high-end close-up shot of a set of professional black dumbbells resting on a polished dark floor. The lighting is dramatic and directional, creating high-contrast highlights and soft shadows. A subtle electric crimson glow reflects on the metallic edges, evoking energy and focus. The style is minimalist and corporate." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy_8KkDHmPTEy3UjQ86jnsdhCIUZkY_xIudjzuSqrPDVCB8OyKRnieE0-6s6EWCgrg1bVey5ox9j-U4TY29ZBFYmUywvxv8eWd_ZJF0rO4w8V7B13g52ZHyhctHJWqxvSFrsmXg4k-PBSEWlibdJOk72DT159xLQjtPkrolQRH7zfUWtcDi1fWQ2yZ7fqoJt6S__y5ozHY5ZT18F7YXKI2w16AB0_jMOVyTL4bsnjz3FG9mhVH3f7T">
+</div>
+<div class="flex-grow">
+<span class="font-label-caps text-label-caps text-primary">STRENGTH</span>
+<h4 class="font-headline-md text-headline-md leading-tight">Barbell Squats</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">4 Sets • 12 Reps</p>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent group-[.completed]:bg-primary group-[.completed]:border-primary group-[.completed]:text-white">
+<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
+</div>
+</div>
+<!-- Exercise Card 2 (Completed) -->
+<div class="exercise-card completed bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist high-angle shot of a premium yoga mat rolled out on a white studio floor. Next to the mat is a transparent water bottle with a sleek red lid. The lighting is bright and airy, suggesting a morning fitness routine. The overall color palette is neutral with sharp crimson accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC84LtMQ3u8YOLsI_q9OjWEHneqgSMqdnCsV2pdehb6OBUZ4xejkd2Gvfc8HuhvzXc5NLGicVOWMA51lzBSOrnDZaL_zrJ3LMHmV4IWMGMjJ_2I6dc7yZOIMBy8UA0ZLNeAMdLnKifXUxLaWB9hKWO8lXBO2-CKtprwLUzruxrvOz2PfA9uWFYfpwqhUxANa_XcJTr_TB8Tm80CtXRq0xoRKlyE2FTzj6yN6yucWit03qCCWy_cTAwm">
+</div>
+<div class="flex-grow">
+<span class="font-label-caps text-label-caps text-primary">STRETCH</span>
+<h4 class="font-headline-md text-headline-md leading-tight">Glute Stretch</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">2 Sets • 60 Sec</p>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-primary bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
+</div>
+</div>
+<!-- Exercise Card 3 -->
+<div class="exercise-card bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
+<div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Action shot of a athlete's legs in high-performance running shoes mid-stride on a dark pavement. The focus is sharp on the shoes, with a blurred background of a modern urban running path. High-contrast sunlight creates a high-energy, kinetic feel. The aesthetic is modern, athletic, and disciplined." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk4hjmP6c0T8hJC6X5qIIuV6OSh-Qtc4aMPMie3vzNTgOg7dbipuwGd3UIS5bw5eyJG4CQ72i5fomJ7V9ctXpXDKc74SoB0IYt4CYtmtjanMIo13KEz5bn0IksWohODR2auMQlXxGVRJYIZqqLgEAOQJ-HjriO60cM4o4cPa1EvTuFdiFAwXdFDDbCAGfOWDsVOAkY7en_McF0rB2BMGPbuZqAJazZyjoTtd0SEQHAylmlhFSkOvWu">
+</div>
+<div class="flex-grow">
+<span class="font-label-caps text-label-caps text-primary">CARDIO</span>
+<h4 class="font-headline-md text-headline-md leading-tight">HIIT Sprints</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">8 Rounds • 30 Sec</p>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent">
+<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Morning Routine View (Hidden by default) -->
+<div class="hidden space-y-md" id="view-morning">
+<div class="bg-primary-container/10 border border-primary-container/20 p-md rounded-xl mb-lg">
+<div class="flex items-center gap-sm mb-xs">
+<span class="material-symbols-outlined text-primary fill-icon">wb_sunny</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Daily Awakening</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">These exercises repeat every morning to prime your metabolism and focus.</p>
+</div>
+<div class="space-y-sm">
+<!-- Morning Item 1 -->
+<div class="exercise-card bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center justify-between group cursor-pointer" onclick="toggleComplete(this)">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">air</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg font-semibold">Deep Breathing</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">5 Minutes</p>
+</div>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent group-[.completed]:bg-primary group-[.completed]:border-primary group-[.completed]:text-white">
+<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
+</div>
+</div>
+<!-- Morning Item 2 -->
+<div class="exercise-card bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center justify-between group cursor-pointer" onclick="toggleComplete(this)">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg font-semibold">Hydration Priming</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">500ml Water</p>
+</div>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent group-[.completed]:bg-primary group-[.completed]:border-primary group-[.completed]:text-white">
+<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
+</div>
+</div>
+<!-- Morning Item 3 -->
+<div class="exercise-card bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center justify-between group cursor-pointer" onclick="toggleComplete(this)">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">accessibility_new</span>
+</div>
+<div>
+<h4 class="font-headline-md text-body-lg font-semibold">Joint Mobility</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Full Body • 10 Mins</p>
+</div>
+</div>
+<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent group-[.completed]:bg-primary group-[.completed]:border-primary group-[.completed]:text-white">
+<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Contextual) -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40" id="main-fab">
+<span class="material-symbols-outlined text-[28px]">add_task</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md border-t border-outline-variant flex justify-around items-center px-4 py-2 pb-safe shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-secondary" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-[10px] mt-1 uppercase">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1" href="#">
+<span class="material-symbols-outlined fill-icon">fitness_center</span>
+<span class="font-label-caps text-[10px] mt-0.5 uppercase">Workouts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-label-caps text-[10px] mt-1 uppercase">Nutrition</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-[10px] mt-1 uppercase">Profile</span>
+</a>
+</nav>
+<script>
+        function switchTab(tab) {
+            const weeklyBtn = document.getElementById('tab-weekly');
+            const morningBtn = document.getElementById('tab-morning');
+            const weeklyView = document.getElementById('view-weekly');
+            const morningView = document.getElementById('view-morning');
+            const fab = document.getElementById('main-fab');
+
+            if (tab === 'weekly') {
+                weeklyBtn.classList.add('bg-primary-container', 'text-on-primary-container');
+                weeklyBtn.classList.remove('text-secondary');
+                morningBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
+                morningBtn.classList.add('text-secondary');
+                
+                weeklyView.classList.remove('hidden');
+                morningView.classList.add('hidden');
+                fab.classList.remove('hidden');
+            } else {
+                morningBtn.classList.add('bg-primary-container', 'text-on-primary-container');
+                morningBtn.classList.remove('text-secondary');
+                weeklyBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
+                weeklyBtn.classList.add('text-secondary');
+                
+                morningView.classList.remove('hidden');
+                weeklyView.classList.add('hidden');
+                fab.classList.add('hidden'); // Suppress FAB on morning routine
+            }
+        }
+
+        function toggleComplete(element) {
+            element.classList.toggle('completed');
+            const indicator = element.querySelector('.status-indicator');
+            if (element.classList.contains('completed')) {
+                indicator.classList.remove('border-outline-variant', 'text-transparent');
+                indicator.classList.add('bg-primary', 'border-primary', 'text-white');
+            } else {
+                indicator.classList.add('border-outline-variant', 'text-transparent');
+                indicator.classList.remove('bg-primary', 'border-primary', 'text-white');
+            }
+        }
+
+        // Initialize micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-95'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-95'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
+        });
+    </script>
+</body></html>
