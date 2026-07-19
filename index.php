@@ -148,14 +148,14 @@ require __DIR__ . '/partials/header.php';
 
         <!-- Quick Actions -->
         <section class="grid grid-cols-2 gap-sm">
-            <button class="flex items-center justify-center gap-base py-sm bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded-full shadow-md active:scale-95 transition-all">
+            <a href="water.php" class="flex items-center justify-center gap-base py-sm bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded-full shadow-md active:scale-95 transition-all">
                 <span class="material-symbols-outlined text-[20px]">water_drop</span>
                 LOG WATER
-            </button>
-            <button class="flex items-center justify-center gap-base py-sm border-2 border-primary text-primary font-label-caps text-label-caps rounded-full active:scale-95 transition-all">
+            </a>
+            <a href="nutrition.php" class="flex items-center justify-center gap-base py-sm border-2 border-primary text-primary font-label-caps text-label-caps rounded-full active:scale-95 transition-all">
                 <span class="material-symbols-outlined text-[20px]">restaurant_menu</span>
                 LOG MEAL
-            </button>
+            </a>
         </section>
 
 <?php require __DIR__ . '/partials/footer.php'; ?>
