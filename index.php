@@ -53,7 +53,6 @@ $chartWorkout = [45, 0, 60, 30, 75, 20, 50];
 require __DIR__ . '/partials/header.php';
 ?>
 
-    <main class="pt-20 px-container-margin max-w-lg mx-auto">
         <!-- Hero Greeting -->
         <section class="mb-lg">
             <p class="font-label-caps text-label-caps text-secondary mb-base"><?= strtoupper(date('l, F j')) ?></p>
@@ -158,6 +157,5 @@ require __DIR__ . '/partials/header.php';
                 LOG MEAL
             </button>
         </section>
-    </main>
 
 <?php require __DIR__ . '/partials/footer.php'; ?>

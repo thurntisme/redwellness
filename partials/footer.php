@@ -1,19 +1,23 @@
+    </main>
+
+    <?php $currentPage = basename($_SERVER['PHP_SELF']); ?>
+
     <!-- Bottom Navigation Bar -->
     <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface/90 dark:bg-surface-container-low/90 backdrop-blur-md shadow-lg rounded-t-xl border-t border-outline-variant max-w-lg mx-auto">
-        <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-transform duration-200" href="#">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+        <a class="flex flex-col items-center justify-center <?= $currentPage === 'index.php' ? 'bg-primary-container text-on-primary-container rounded-full px-4 py-1' : 'text-secondary hover:text-primary' ?> active:scale-90 transition-transform duration-200" href="index.php">
+            <span class="material-symbols-outlined" style="font-variation-settings: <?= $currentPage === 'index.php' ? "'FILL' 1" : "'FILL' 0" ?>;">dashboard</span>
             <span class="font-label-caps text-[10px]">Dashboard</span>
         </a>
-        <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-colors" href="#">
-            <span class="material-symbols-outlined">fitness_center</span>
+        <a class="flex flex-col items-center justify-center <?= $currentPage === 'workout.php' ? 'bg-primary-container text-on-primary-container rounded-full px-4 py-1' : 'text-secondary hover:text-primary' ?> active:scale-90 transition-transform duration-200" href="workout.php">
+            <span class="material-symbols-outlined" style="font-variation-settings: <?= $currentPage === 'workout.php' ? "'FILL' 1" : "'FILL' 0" ?>;">fitness_center</span>
             <span class="font-label-caps text-[10px]">Workouts</span>
         </a>
-        <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-colors" href="#">
-            <span class="material-symbols-outlined">restaurant_menu</span>
+        <a class="flex flex-col items-center justify-center <?= $currentPage === 'nutrition.php' ? 'bg-primary-container text-on-primary-container rounded-full px-4 py-1' : 'text-secondary hover:text-primary' ?> active:scale-90 transition-transform duration-200" href="nutrition.php">
+            <span class="material-symbols-outlined" style="font-variation-settings: <?= $currentPage === 'nutrition.php' ? "'FILL' 1" : "'FILL' 0" ?>;">restaurant_menu</span>
             <span class="font-label-caps text-[10px]">Nutrition</span>
         </a>
-        <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-colors" href="#">
-            <span class="material-symbols-outlined">person</span>
+        <a class="flex flex-col items-center justify-center <?= $currentPage === 'profile.php' ? 'bg-primary-container text-on-primary-container rounded-full px-4 py-1' : 'text-secondary hover:text-primary' ?> active:scale-90 transition-transform duration-200" href="profile.php">
+            <span class="material-symbols-outlined" style="font-variation-settings: <?= $currentPage === 'profile.php' ? "'FILL' 1" : "'FILL' 0" ?>;">person</span>
             <span class="font-label-caps text-[10px]">Profile</span>
         </a>
     </nav>
@@ -23,6 +27,7 @@
         <span class="material-symbols-outlined text-[28px]">add</span>
     </button>
 
+<?php if ($currentPage === 'index.php'): ?>
     <script>
         const ctx = document.getElementById('progressChart').getContext('2d');
         new Chart(ctx, {
@@ -93,7 +98,10 @@
                 }
             }
         });
+    </script>
+<?php endif; ?>
 
+    <script>
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
             if (window.scrollY > 20) {

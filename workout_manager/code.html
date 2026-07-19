@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="light" lang="en"><head>
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Vigor - Workout Routine Manager</title>
@@ -189,9 +189,7 @@
 <h4 class="font-headline-md text-headline-md leading-tight">Barbell Squats</h4>
 <p class="font-body-sm text-body-sm text-on-surface-variant">4 Sets • 12 Reps</p>
 </div>
-<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent group-[.completed]:bg-primary group-[.completed]:border-primary group-[.completed]:text-white">
-<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
-</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
 </div>
 <!-- Exercise Card 2 (Completed) -->
 <div class="exercise-card completed bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
@@ -203,9 +201,7 @@
 <h4 class="font-headline-md text-headline-md leading-tight">Glute Stretch</h4>
 <p class="font-body-sm text-body-sm text-on-surface-variant">2 Sets • 60 Sec</p>
 </div>
-<div class="status-indicator w-8 h-8 rounded-full border-2 border-primary bg-primary flex items-center justify-center text-white">
-<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
-</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
 </div>
 <!-- Exercise Card 3 -->
 <div class="exercise-card bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
@@ -217,9 +213,7 @@
 <h4 class="font-headline-md text-headline-md leading-tight">HIIT Sprints</h4>
 <p class="font-body-sm text-body-sm text-on-surface-variant">8 Rounds • 30 Sec</p>
 </div>
-<div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent">
-<span class="material-symbols-outlined text-[20px] fill-icon">check</span>
-</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
 </div>
 </div>
 </div>
@@ -282,9 +276,7 @@
 </div>
 </main>
 <!-- FAB (Contextual) -->
-<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40" id="main-fab">
-<span class="material-symbols-outlined text-[28px]">add_task</span>
-</button>
+
 <!-- Bottom Navigation Bar -->
 <nav class="fixed bottom-0 left-0 w-full z-50 bg-surface/90 backdrop-blur-md border-t border-outline-variant flex justify-around items-center px-4 py-2 pb-safe shadow-lg rounded-t-xl">
 <a class="flex flex-col items-center justify-center text-secondary" href="#">
@@ -352,4 +344,6 @@
             btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
         });
     </script>
+
+
 </body></html>

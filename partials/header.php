@@ -110,3 +110,5 @@
             <span class="material-symbols-outlined">calendar_today</span>
         </button>
     </header>
+
+    <main class="pt-20 px-container-margin max-w-lg mx-auto">
