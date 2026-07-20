@@ -107,13 +107,15 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
     </style>
+    <script src="/assets/js/user.js"></script>
 </head>
 <body class="font-body-lg text-on-background min-h-screen pb-32">
     <!-- Top App Bar -->
     <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full z-50 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md shadow-sm h-14 flex justify-between items-center px-container-margin max-w-lg mx-auto">
         <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
-                <img class="w-full h-full object-cover" src="<?= htmlspecialchars($profileImage) ?>" alt="Profile">
+            <div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant flex items-center justify-center bg-primary-container text-on-primary-container text-[12px] font-bold" id="profileAvatar">
+                <img class="w-full h-full object-cover hidden" id="profileImg" src="" alt="Profile">
+                <span id="profileInitials">?</span>
             </div>
             <span class="font-display-metrics text-headline-lg-mobile text-primary">RedWellness</span>
         </div>
@@ -121,5 +123,25 @@
             <span class="material-symbols-outlined">calendar_today</span>
         </button>
     </header>
+
+    <script>
+        (function() {
+            var user = User.get();
+            if (user) {
+                var initialsEl = document.getElementById('profileInitials');
+                var imgEl = document.getElementById('profileImg');
+                if (initialsEl) {
+                    var parts = (user.name || '').split(/\s+/);
+                    var initials = parts.map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
+                    initialsEl.textContent = initials || '?';
+                }
+                if (user.avatar_url && imgEl) {
+                    imgEl.src = user.avatar_url;
+                    imgEl.classList.remove('hidden');
+                    if (initialsEl) initialsEl.style.display = 'none';
+                }
+            }
+        })();
+    </script>
 
     <main class="pt-20 px-container-margin max-w-lg mx-auto">

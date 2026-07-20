@@ -19,7 +19,7 @@
                     <label class="font-label-caps text-label-caps text-on-surface-variant px-1" for="email">EMAIL ADDRESS</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-primary transition-colors">mail</span>
-                        <input class="w-full h-12 pl-12 pr-4 bg-surface-container-low border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-outline/50" id="email" placeholder="name@example.com" required type="email">
+                        <input class="w-full h-12 pl-12 pr-4 bg-surface-container-low border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-outline/50" id="email" name="email" placeholder="name@example.com" required type="email">
                     </div>
                 </div>
 
@@ -28,7 +28,7 @@
                     <label class="font-label-caps text-label-caps text-on-surface-variant px-1" for="password">PASSWORD</label>
                     <div class="relative group">
                         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary group-focus-within:text-primary transition-colors">lock</span>
-                        <input class="w-full h-12 pl-12 pr-12 bg-surface-container-low border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-outline/50" id="password" placeholder="••••••••" required type="password">
+                        <input class="w-full h-12 pl-12 pr-12 bg-surface-container-low border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-outline/50" id="password" name="password" placeholder="••••••••" required type="password">
                         <button class="absolute right-4 top-1/2 -translate-y-1/2 text-secondary hover:text-on-surface transition-colors" onclick="togglePassword()" type="button">
                             <span class="material-symbols-outlined" id="passIcon">visibility</span>
                         </button>
@@ -84,6 +84,10 @@
     <div class="fixed -bottom-32 -left-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10 animate-pulse"></div>
     <div class="fixed -top-32 -right-32 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10"></div>
 
+    <script src="/assets/js/validate.js"></script>
+    <script src="/assets/js/request.js"></script>
+    <script src="/assets/js/user.js"></script>
+    <script src="/assets/js/pages/login.js"></script>
     <script>
         function togglePassword() {
             const passInput = document.getElementById('password');
@@ -96,23 +100,6 @@
                 icon.innerText = 'visibility';
             }
         }
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalContent = btn.innerHTML;
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Logging in...';
-
-            setTimeout(() => {
-                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Welcome back!';
-                btn.classList.replace('bg-primary-container', 'bg-tertiary-container');
-                setTimeout(() => {
-                    window.location.href = '<?= url('app') ?>';
-                }, 1500);
-            }, 1500);
-        });
     </script>
 
 <?php require __DIR__ . '/partials/footer-landing.php'; ?>

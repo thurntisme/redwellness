@@ -1,7 +1,6 @@
 <?php
 // Dashboard data
-$userName = 'Alex';
-$profileImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZvge-KUyLo9_aiV7NOJSIG6L3_LlkBWFyYJl9FPdC8W2lRig0FbChKCoHsaI-0FI8nT6ujOJ-ownREFgkXq2DP3ccNluU6pJol1b6HdhJcp2GlBNhqG5Gyk7vHU33qN_PJE1Ch8x85fwtY_zcFpMHiBRLhv0_CLpp1HTzuRfoyAeeTqKErAP4tKLT94hqzSlsQrow9R5dalP6w1troDJBTkjXQc7OqJy4lyaoGhPLxngFPa9vGm4Q';
+$userName = $_SESSION['user_name'] ?? 'Guest';
 
 // Date/time
 $date = date('l, F j');
@@ -40,7 +39,7 @@ $workouts = [
         'duration' => '45 MIN',
         'level' => 'Intermediate',
         'status' => 'pending',
-        'image' => $profileImage,
+        'image' => 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop',
     ],
 ];
 

@@ -105,6 +105,7 @@
 
     <script src="/assets/js/validate.js"></script>
     <script src="/assets/js/request.js"></script>
+    <script src="/assets/js/user.js"></script>
     <script src="/assets/js/pages/register.js"></script>
     <script>
         function togglePassword() {

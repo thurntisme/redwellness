@@ -67,11 +67,20 @@ try {
 
     $userId = $pdo->lastInsertId();
 
+    $_SESSION['user_id'] = (int) $userId;
+    $_SESSION['user_name'] = $name;
+    $_SESSION['user_email'] = $email;
+
     echo json_encode([
         'success' => true,
         'message' => 'Account created successfully.',
-        'redirect' => url('login'),
-        'user_id' => $userId,
+        'redirect' => url('app'),
+        'user' => [
+            'id' => (int) $userId,
+            'name' => $name,
+            'email' => $email,
+            'avatar_url' => null,
+        ],
     ]);
 
 } catch (Exception $e) {
