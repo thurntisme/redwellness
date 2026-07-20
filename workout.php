@@ -124,11 +124,6 @@ require __DIR__ . '/partials/header.php';
             </div>
         </div>
 
-    <!-- FAB -->
-    <button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40" id="main-fab">
-        <span class="material-symbols-outlined text-[28px]">add_task</span>
-    </button>
-
 <?php require __DIR__ . '/partials/footer.php'; ?>
 
     <script>
@@ -137,7 +132,6 @@ require __DIR__ . '/partials/header.php';
             const morningBtn = document.getElementById('tab-morning');
             const weeklyView = document.getElementById('view-weekly');
             const morningView = document.getElementById('view-morning');
-            const fab = document.getElementById('main-fab');
 
             if (tab === 'weekly') {
                 weeklyBtn.classList.add('bg-primary-container', 'text-on-primary-container');
@@ -146,7 +140,6 @@ require __DIR__ . '/partials/header.php';
                 morningBtn.classList.add('text-secondary');
                 weeklyView.classList.remove('hidden');
                 morningView.classList.add('hidden');
-                fab.classList.remove('hidden');
             } else {
                 morningBtn.classList.add('bg-primary-container', 'text-on-primary-container');
                 morningBtn.classList.remove('text-secondary');
@@ -154,7 +147,6 @@ require __DIR__ . '/partials/header.php';
                 weeklyBtn.classList.add('text-secondary');
                 morningView.classList.remove('hidden');
                 weeklyView.classList.add('hidden');
-                fab.classList.add('hidden');
             }
         }
 

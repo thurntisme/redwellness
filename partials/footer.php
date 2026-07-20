@@ -1,3 +1,4 @@
+
     </main>
 
     <?php $currentPage = basename($_SERVER['PHP_SELF']); ?>
@@ -25,11 +26,6 @@
             <span class="font-label-caps text-[10px]">Profile</span>
         </a>
     </nav>
-
-    <!-- Floating Action Button -->
-    <button class="fixed bottom-20 right-6 w-14 h-14 rounded-full bg-primary text-on-primary shadow-xl flex items-center justify-center z-40 active:scale-90 transition-transform duration-150">
-        <span class="material-symbols-outlined text-[28px]">add</span>
-    </button>
 
 <?php if ($currentPage === 'index.php'): ?>
     <script>

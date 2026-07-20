@@ -146,11 +146,6 @@ require __DIR__ . '/partials/header.php';
             </div>
         </section>
 
-    <!-- FAB: Log Meal -->
-    <button onclick="openMealModal()" class="fixed bottom-24 right-container-margin z-50 w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-200">
-        <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">add_circle</span>
-    </button>
-
     <!-- Meal Selection Modal -->
     <div class="fixed inset-0 z-[100] hidden items-center justify-center p-container-margin" id="meal-modal">
         <div class="absolute inset-0 bg-on-background/60 backdrop-blur-md" onclick="closeMealModal()"></div>
