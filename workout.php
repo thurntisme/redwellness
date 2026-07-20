@@ -106,7 +106,7 @@ require __DIR__ . '/partials/header.php';
             </div>
 
             <?php foreach ($exercises as $exercise): ?>
-            <div class="exercise-card <?= $exercise['status'] === 'completed' ? 'completed' : '' ?> bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
+            <a href="exercise.php" class="exercise-card <?= $exercise['status'] === 'completed' ? 'completed' : '' ?> bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm no-underline text-on-surface">
                 <div class="w-14 h-14 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 relative">
                     <img class="w-full h-full object-cover" src="<?= htmlspecialchars($exercise['image']) ?>" alt="<?= htmlspecialchars($exercise['name']) ?>">
                     <?php if ($exercise['status'] === 'completed'): ?>
@@ -126,7 +126,7 @@ require __DIR__ . '/partials/header.php';
                     </div>
                     <span class="material-symbols-outlined text-[20px] text-secondary group-hover:translate-x-1 transition-transform">chevron_right</span>
                 </div>
-            </div>
+            </a>
             <?php endforeach; ?>
         </section>
 
