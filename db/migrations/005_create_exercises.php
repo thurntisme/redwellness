@@ -10,21 +10,14 @@ $pdo->exec("
     )
 ");
 
-// Default exercises
-$exercises = [
-    ['Push-ups', 'Bodyweight'],
-    ['Squats', 'Bodyweight'],
-    ['Lunges', 'Bodyweight'],
-    ['Plank', 'Core'],
-    ['Burpees', 'Cardio'],
-    ['Mountain Climbers', 'Cardio'],
-    ['Bench Press', 'Weight'],
-    ['Deadlift', 'Weight'],
-    ['Pull-ups', 'Bodyweight'],
-    ['Bicep Curls', 'Weight'],
-];
-
-$stmt = $pdo->prepare("INSERT INTO exercises (name, category, image_url) VALUES (?, ?, NULL)");
-foreach ($exercises as [$name, $category]) {
-    $stmt->execute([$name, $category]);
+// Seed from exercises.json
+$jsonPath = __DIR__ . '/../../assets/json/exercises.json';
+if (file_exists($jsonPath)) {
+    $exercises = json_decode(file_get_contents($jsonPath), true);
+    if (is_array($exercises)) {
+        $stmt = $pdo->prepare("INSERT INTO exercises (name, category, image_url) VALUES (?, ?, NULL)");
+        foreach ($exercises as $ex) {
+            $stmt->execute([$ex['name'], $ex['category']]);
+        }
+    }
 }
