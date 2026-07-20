@@ -23,5 +23,13 @@
   { "name": "Bicycle Crunches", "category": "Core" },
   { "name": "Box Jumps", "category": "Cardio" },
   { "name": "Kettlebell Swings", "category": "Cardio" },
-  { "name": "Romanian Deadlift", "category": "Weight" }
+  { "name": "Romanian Deadlift", "category": "Weight" },
+  { "name": "Deep Breathing", "category": "Mindfulness" },
+  { "name": "Hydration Priming", "category": "Wellness" },
+  { "name": "Joint Mobility", "category": "Flexibility" },
+  { "name": "Meditation", "category": "Mindfulness" },
+  { "name": "Foam Rolling", "category": "Recovery" },
+  { "name": "Stretching", "category": "Flexibility" },
+  { "name": "Gratitude Journaling", "category": "Mindfulness" },
+  { "name": "Cold Shower", "category": "Wellness" }
 ]
