@@ -3,7 +3,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!data.success) return;
 
   const { exercises, plan, logged_exercise_ids, today_day, morning_routine } = data;
-  const loggedSet = new Set(logged_exercise_ids);
+
+  function getLocalCompletedIds() {
+    const today = new Date().toISOString().split('T')[0];
+    try {
+      const stored = JSON.parse(localStorage.getItem('redwellness_completed_today') || '{}');
+      if (stored.date === today && Array.isArray(stored.ids)) return stored.ids;
+    } catch (_) {}
+    return [];
+  }
+
+  const loggedSet = new Set([...logged_exercise_ids, ...getLocalCompletedIds()]);
   let selectedDay = today_day;
 
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -17,10 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const currentPlan = getPlanForDay(selectedDay);
     const completedCount = currentPlan.filter(p => loggedSet.has(parseInt(p.exercise_id))).length;
 
-    container.innerHTML = currentPlan.map(p => {
+    const allDone = selectedDay === today_day && currentPlan.length > 0 && completedCount === currentPlan.length;
+    container.innerHTML = (allDone ? '<div class="flex items-center gap-2 bg-tertiary/10 border border-tertiary/20 rounded-xl px-md py-sm mb-sm"><span class="material-symbols-outlined text-tertiary fill-icon">check_circle</span><span class="font-body-sm font-semibold text-tertiary">All done for today!</span></div>' : '') + currentPlan.map(p => {
       const isCompleted = loggedSet.has(parseInt(p.exercise_id));
       return `
-        <div class="exercise-card ${isCompleted ? 'completed' : ''} bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm no-underline text-on-surface">
+        <div class="exercise-card ${isCompleted ? 'completed' : ''} bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm no-underline text-on-surface" onclick="window.location.href='/exercise?id=${p.exercise_id}'">
           <div class="w-14 h-14 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 relative flex items-center justify-center">
             <span class="material-symbols-outlined text-primary text-[28px]">fitness_center</span>
             ${isCompleted ? '<div class="absolute inset-0 bg-primary/20 flex items-center justify-center"><span class="material-symbols-outlined text-on-primary fill-icon">check</span></div>' : ''}
@@ -31,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p class="font-body-sm text-body-sm text-on-surface-variant">${p.sets} Sets \u2022 ${p.reps} Reps</p>
           </div>
           <div class="flex items-center">
-            ${isCompleted ? '<div><span class="material-symbols-outlined text-[20px] text-primary fill-icon">check_circle</span></div>' : `<button onclick="logWorkout(${p.exercise_id}, ${p.id || 0}, ${p.sets}, ${p.reps})" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center active:scale-90 transition-transform"><span class="material-symbols-outlined text-[16px] text-white">check</span></button>`}
+            <span class="material-symbols-outlined text-secondary group-hover:translate-x-0.5 transition-transform">chevron_right</span>
           </div>
         </div>
       `;
@@ -44,23 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (doneEl) doneEl.textContent = completedCount;
     if (leftEl) leftEl.textContent = currentPlan.length - completedCount;
   }
-
-  window.logWorkout = async function (exerciseId, workoutId, sets, reps) {
-    const result = await Request.post('/ajax/workout', {
-      action: 'log',
-      exercise_id: exerciseId,
-      workout_id: workoutId,
-      sets_completed: sets,
-      reps_completed: reps,
-      duration_minutes: 0,
-    });
-    if (result.success) {
-      loggedSet.add(exerciseId);
-      renderExercises();
-    } else {
-      alert(result.message || 'Failed to log workout.');
-    }
-  };
 
   renderExercises();
 
@@ -183,7 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function renderMorningRoutine() {
     morningContainer.innerHTML = (morning_routine || []).map(item => `
-      <div class="exercise-card bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm">
+      <div class="exercise-card bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="window.location.href='/exercise?id=${item.exercise_id}'">
         <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0">
           <span class="material-symbols-outlined text-primary">wb_sunny</span>
         </div>
