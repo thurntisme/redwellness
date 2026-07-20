@@ -49,116 +49,97 @@ require __DIR__ . '/partials/header.php';
             <p class="font-body-sm text-body-sm text-on-surface-variant">Manage your kinetic energy and stay disciplined.</p>
         </section>
 
-        <!-- Tabbed Navigation -->
-        <div class="flex bg-surface-container-low p-1 rounded-xl mb-md">
-            <button class="flex-1 py-3 px-2 rounded-lg font-label-caps text-label-caps transition-all bg-primary-container text-on-primary-container" id="tab-weekly" onclick="switchTab('weekly')">
-                WEEKLY SCHEDULE
-            </button>
-            <button class="flex-1 py-3 px-2 rounded-lg font-label-caps text-label-caps transition-all text-secondary" id="tab-morning" onclick="switchTab('morning')">
-                MORNING ROUTINE
-            </button>
-        </div>
-
-        <!-- Weekly Schedule View -->
-        <div class="space-y-md" id="view-weekly">
-            <div class="flex justify-between items-end">
-                <div>
-                    <h3 class="font-headline-md text-headline-md">Today's Exercises</h3>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant"><?= htmlspecialchars($today) ?></p>
+        <!-- Workout Summary -->
+        <section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md mb-lg">
+            <h3 class="font-label-caps text-label-caps text-primary uppercase tracking-wider mb-sm">Workout Summary</h3>
+            <div class="grid grid-cols-3 gap-sm text-center">
+                <div class="bg-surface-container-low rounded-lg p-sm">
+                    <p class="font-display-metrics text-headline-md text-on-surface"><?= count($exercises) + count($morningRoutine) ?></p>
+                    <p class="font-body-sm text-secondary">Total</p>
                 </div>
-                <div class="flex gap-2">
-                    <button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant text-primary hover:bg-surface-container-high transition-colors">
-                        <span class="material-symbols-outlined">edit</span>
-                    </button>
-                    <button class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant text-primary hover:bg-surface-container-high transition-colors">
-                        <span class="material-symbols-outlined">settings</span>
-                    </button>
+                <div class="bg-tertiary/10 rounded-lg p-sm">
+                    <p class="font-display-metrics text-headline-md text-tertiary"><?= count(array_filter($exercises, fn($e) => $e['status'] === 'completed')) + count($morningRoutine) ?></p>
+                    <p class="font-body-sm text-secondary">Done</p>
+                </div>
+                <div class="bg-primary/10 rounded-lg p-sm">
+                    <p class="font-display-metrics text-headline-md text-primary"><?= count(array_filter($exercises, fn($e) => $e['status'] === 'pending')) ?></p>
+                    <p class="font-body-sm text-secondary">Left</p>
                 </div>
             </div>
+        </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                <?php foreach ($exercises as $exercise): ?>
-                <div class="exercise-card <?= $exercise['status'] === 'completed' ? 'completed' : '' ?> bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
-                    <div class="w-16 h-16 rounded-xl bg-surface-container overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" src="<?= htmlspecialchars($exercise['image']) ?>" alt="<?= htmlspecialchars($exercise['name']) ?>">
-                    </div>
-                    <div class="flex-grow">
-                        <span class="font-label-caps text-label-caps text-primary"><?= $exercise['category'] ?></span>
-                        <h4 class="font-headline-md text-headline-md leading-tight"><?= htmlspecialchars($exercise['name']) ?></h4>
-                        <p class="font-body-sm text-body-sm text-on-surface-variant"><?= $exercise['detail'] ?></p>
-                    </div>
-                    <div class="status-indicator w-8 h-8 rounded-full border-2 <?= $exercise['status'] === 'completed' ? 'bg-primary border-primary text-white' : 'border-outline-variant text-transparent' ?> flex items-center justify-center">
-                        <span class="material-symbols-outlined text-[20px] fill-icon">check</span>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <!-- Morning Routine View -->
-        <div class="hidden space-y-md" id="view-morning">
-            <div class="bg-primary-container/10 border border-primary-container/20 p-md rounded-xl mb-lg">
+        <!-- Morning Routine -->
+        <section class="mb-lg">
+            <div class="bg-primary-container/10 border border-primary-container/20 p-md rounded-xl mb-sm">
                 <div class="flex items-center gap-sm mb-xs">
                     <span class="material-symbols-outlined text-primary fill-icon">wb_sunny</span>
-                    <h3 class="font-headline-md text-headline-md text-on-surface">Daily Awakening</h3>
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Morning Routine</h3>
                 </div>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">These exercises repeat every morning to prime your metabolism and focus.</p>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Prime your metabolism and focus every morning.</p>
             </div>
             <div class="space-y-sm">
                 <?php foreach ($morningRoutine as $item): ?>
-                <div class="exercise-card bg-surface-container-lowest border border-outline-variant p-md rounded-xl flex items-center justify-between group cursor-pointer" onclick="toggleComplete(this)">
-                    <div class="flex items-center gap-md">
-                        <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
-                            <span class="material-symbols-outlined text-primary"><?= $item['icon'] ?></span>
-                        </div>
-                        <div>
-                            <h4 class="font-headline-md text-body-lg font-semibold"><?= htmlspecialchars($item['name']) ?></h4>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant"><?= $item['detail'] ?></p>
-                        </div>
+                <div class="exercise-card bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
+                    <div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-primary"><?= $item['icon'] ?></span>
                     </div>
-                    <div class="status-indicator w-8 h-8 rounded-full border-2 border-outline-variant flex items-center justify-center text-transparent group-[.completed]:bg-primary group-[.completed]:border-primary group-[.completed]:text-white">
-                        <span class="material-symbols-outlined text-[20px] fill-icon">check</span>
+                    <div class="flex-grow min-w-0">
+                        <h4 class="font-headline-md text-body-lg font-semibold"><?= htmlspecialchars($item['name']) ?></h4>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant"><?= $item['detail'] ?></p>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="check-icon hidden">
+                            <span class="material-symbols-outlined text-[20px] text-tertiary fill-icon">check_circle</span>
+                        </div>
+                        <span class="material-symbols-outlined text-[20px] text-secondary group-hover:translate-x-1 transition-transform">chevron_right</span>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
-        </div>
+        </section>
+
+        <!-- Today's Exercises -->
+        <section class="space-y-sm">
+            <div class="mb-sm">
+                <h3 class="font-headline-md text-headline-md">Today's Exercises</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant"><?= htmlspecialchars($today) ?></p>
+            </div>
+
+            <?php foreach ($exercises as $exercise): ?>
+            <div class="exercise-card <?= $exercise['status'] === 'completed' ? 'completed' : '' ?> bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm" onclick="toggleComplete(this)">
+                <div class="w-14 h-14 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 relative">
+                    <img class="w-full h-full object-cover" src="<?= htmlspecialchars($exercise['image']) ?>" alt="<?= htmlspecialchars($exercise['name']) ?>">
+                    <?php if ($exercise['status'] === 'completed'): ?>
+                    <div class="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-on-primary fill-icon">check</span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <div class="flex-grow min-w-0">
+                    <span class="font-label-caps text-label-caps text-primary"><?= $exercise['category'] ?></span>
+                    <h4 class="font-headline-md text-headline-md leading-tight truncate"><?= htmlspecialchars($exercise['name']) ?></h4>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant"><?= $exercise['detail'] ?></p>
+                </div>
+                <div class="flex items-center">
+                    <div class="check-icon hidden">
+                        <span class="material-symbols-outlined text-[20px] text-primary fill-icon">check_circle</span>
+                    </div>
+                    <span class="material-symbols-outlined text-[20px] text-secondary group-hover:translate-x-1 transition-transform">chevron_right</span>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </section>
 
 <?php require __DIR__ . '/partials/footer.php'; ?>
 
     <script>
-        function switchTab(tab) {
-            const weeklyBtn = document.getElementById('tab-weekly');
-            const morningBtn = document.getElementById('tab-morning');
-            const weeklyView = document.getElementById('view-weekly');
-            const morningView = document.getElementById('view-morning');
-
-            if (tab === 'weekly') {
-                weeklyBtn.classList.add('bg-primary-container', 'text-on-primary-container');
-                weeklyBtn.classList.remove('text-secondary');
-                morningBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
-                morningBtn.classList.add('text-secondary');
-                weeklyView.classList.remove('hidden');
-                morningView.classList.add('hidden');
-            } else {
-                morningBtn.classList.add('bg-primary-container', 'text-on-primary-container');
-                morningBtn.classList.remove('text-secondary');
-                weeklyBtn.classList.remove('bg-primary-container', 'text-on-primary-container');
-                weeklyBtn.classList.add('text-secondary');
-                morningView.classList.remove('hidden');
-                weeklyView.classList.add('hidden');
-            }
-        }
-
         function toggleComplete(element) {
             element.classList.toggle('completed');
-            const indicator = element.querySelector('.status-indicator');
+            const checkIcon = element.querySelector('.check-icon');
             if (element.classList.contains('completed')) {
-                indicator.classList.remove('border-outline-variant', 'text-transparent');
-                indicator.classList.add('bg-primary', 'border-primary', 'text-white');
+                checkIcon.classList.remove('hidden');
             } else {
-                indicator.classList.add('border-outline-variant', 'text-transparent');
-                indicator.classList.remove('bg-primary', 'border-primary', 'text-white');
+                checkIcon.classList.add('hidden');
             }
         }
     </script>
