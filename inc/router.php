@@ -27,6 +27,11 @@ if ($path !== '/' && file_exists($staticFile) && is_file($staticFile)) {
 $page = ltrim($path, '/');
 $phpFile = __DIR__ . '/../' . $page . '.php';
 
+// Route AJAX requests to inc/ajax/
+if (str_starts_with($page, 'ajax/')) {
+    $phpFile = __DIR__ . '/' . $page . '.php';
+}
+
 if ($page === '') {
     require __DIR__ . '/../index.php';
 } elseif (file_exists($phpFile)) {
