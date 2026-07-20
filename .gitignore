@@ -1,0 +1,32 @@
+# Database
+data/*.db
+data/*.db-wal
+data/*.db-shm
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PHP
+vendor/
+composer.lock
+*.log
+
+# Environment
+.env
+.env.local
+
+# Cache
+*.cache
+.cache/
+
+# Temporary
+tmp/
+temp/
