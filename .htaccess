@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Route all non-file/non-directory requests through the front controller
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ inc/router.php [QSA,L]
+
+# Serve existing static files and directories directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
