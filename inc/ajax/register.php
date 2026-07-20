@@ -70,6 +70,8 @@ try {
     $_SESSION['user_id'] = (int) $userId;
     $_SESSION['user_name'] = $name;
     $_SESSION['user_email'] = $email;
+    $_SESSION['calorie_goal'] = 2500;
+    $_SESSION['water_goal_ml'] = 2500;
 
     echo json_encode([
         'success' => true,

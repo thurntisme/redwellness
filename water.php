@@ -1,5 +1,5 @@
 <?php
-$hydrationGoal = $_SESSION['water_goal'] ?? 2.5;
+$hydrationGoal = round(($_SESSION['water_goal_ml'] ?? 2500) / 1000, 1);
 
 require __DIR__ . '/partials/header.php';
 ?>

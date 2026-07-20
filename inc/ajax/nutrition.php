@@ -35,14 +35,14 @@ if ($method === 'GET') {
             $totals['fats']     += (int) $log['fats'];
         }
 
-        $goalsStmt = $pdo->prepare("SELECT * FROM user_nutrition_goals WHERE user_id = ?");
+        $goalsStmt = $pdo->prepare("SELECT calorie_goal, protein_goal, carbs_goal, fats_goal, water_goal_ml FROM user_goals WHERE user_id = ?");
         $goalsStmt->execute([$userId]);
         $goals = $goalsStmt->fetch();
 
         if (!$goals) {
-            $ins = $pdo->prepare("INSERT INTO user_nutrition_goals (user_id) VALUES (?)");
+            $ins = $pdo->prepare("INSERT INTO user_goals (user_id) VALUES (?)");
             $ins->execute([$userId]);
-            $goals = ['calorie_goal' => 2500, 'protein_goal' => 150, 'carbs_goal' => 250, 'fats_goal' => 65];
+            $goals = ['calorie_goal' => 2500, 'protein_goal' => 150, 'carbs_goal' => 250, 'fats_goal' => 65, 'water_goal_ml' => 2500];
         }
 
         $mtStmt = $pdo->query("SELECT id, name FROM meal_types ORDER BY id");
@@ -126,9 +126,13 @@ if ($method === 'POST') {
             $proteinGoal = (int) ($input['protein_goal'] ?? 150);
             $carbsGoal = (int) ($input['carbs_goal'] ?? 250);
             $fatsGoal = (int) ($input['fats_goal'] ?? 65);
+            $waterGoalMl = (int) ($input['water_goal_ml'] ?? 2500);
 
-            $stmt = $pdo->prepare("INSERT INTO user_nutrition_goals (user_id, calorie_goal, protein_goal, carbs_goal, fats_goal) VALUES (?, ?, ?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET calorie_goal = excluded.calorie_goal, protein_goal = excluded.protein_goal, carbs_goal = excluded.carbs_goal, fats_goal = excluded.fats_goal");
-            $stmt->execute([$userId, $calorieGoal, $proteinGoal, $carbsGoal, $fatsGoal]);
+            $stmt = $pdo->prepare("INSERT INTO user_goals (user_id, calorie_goal, protein_goal, carbs_goal, fats_goal, water_goal_ml) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(user_id) DO UPDATE SET calorie_goal = excluded.calorie_goal, protein_goal = excluded.protein_goal, carbs_goal = excluded.carbs_goal, fats_goal = excluded.fats_goal, water_goal_ml = excluded.water_goal_ml");
+            $stmt->execute([$userId, $calorieGoal, $proteinGoal, $carbsGoal, $fatsGoal, $waterGoalMl]);
+
+            $_SESSION['calorie_goal'] = $calorieGoal;
+            $_SESSION['water_goal_ml'] = $waterGoalMl;
 
             echo json_encode(['success' => true, 'message' => 'Goals updated.']);
             exit;

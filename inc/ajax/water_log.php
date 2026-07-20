@@ -29,7 +29,7 @@ if ($method === 'GET') {
             $log['time'] = date('h:i A', strtotime($log['logged_at']));
         }
 
-        $goal = $_SESSION['water_goal'] ?? 2.5;
+        $goal = round(($_SESSION['water_goal_ml'] ?? 2500) / 1000, 1);
 
         echo json_encode([
             'success' => true,

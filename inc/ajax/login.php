@@ -78,6 +78,18 @@ try {
     $_SESSION['user_name'] = $user['name'];
     $_SESSION['user_email'] = $user['email'];
 
+    // Load goals
+    $gStmt = $pdo->prepare("SELECT calorie_goal, water_goal_ml FROM user_goals WHERE user_id = ?");
+    $gStmt->execute([$user['id']]);
+    $goals = $gStmt->fetch();
+    if ($goals) {
+        $_SESSION['calorie_goal'] = (int) $goals['calorie_goal'];
+        $_SESSION['water_goal_ml'] = (int) $goals['water_goal_ml'];
+    } else {
+        $_SESSION['calorie_goal'] = 2500;
+        $_SESSION['water_goal_ml'] = 2500;
+    }
+
     echo json_encode([
         'success' => true,
         'message' => 'Login successful.',

@@ -40,9 +40,14 @@ $caloriesLeft = max(0, $calorieGoal - $caloriesConsumed);
 $caloriesPercent = $calorieGoal > 0 ? round($caloriesConsumed / $calorieGoal * 100) : 0;
 
 // ── Water ──────────────────────────────────────────────────────────────
-$waterGoal = 2.5;
 $waterCurrent = 0;
+$waterGoal = 2.5;
 if ($userId) {
+    $gStmt = $pdo->prepare("SELECT water_goal_ml FROM user_goals WHERE user_id = ?");
+    $gStmt->execute([$userId]);
+    $g = $gStmt->fetch();
+    $waterGoal = $g ? round((int) $g['water_goal_ml'] / 1000, 1) : 2.5;
+
     $waterStmt = $pdo->prepare("SELECT COALESCE(SUM(amount),0) as total_ml FROM water_logs WHERE user_id = ? AND date(logged_at) = date('now')");
     $waterStmt->execute([$userId]);
     $waterData = $waterStmt->fetch();
