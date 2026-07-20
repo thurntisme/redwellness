@@ -12,6 +12,7 @@
 // ── Bootstrap ──────────────────────────────────────────────────────────
 require __DIR__ . '/url.php';
 require __DIR__ . '/db.php';
+require __DIR__ . '/auth.php';
 
 // ── Routing ────────────────────────────────────────────────────────────
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
