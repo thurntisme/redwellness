@@ -85,7 +85,7 @@ require __DIR__ . '/partials/header.php';
                     <p class="font-headline-md text-headline-md"><?= number_format($caloriesLeft) ?></p>
                     <p class="font-body-sm text-on-surface-variant">kcal left</p>
                 </div>
-                <button class="mt-sm w-full py-1 bg-primary-container text-on-primary-container font-label-caps text-[10px] rounded-full shadow-sm active:scale-95 transition-all flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[14px]">add</span>LOG</button>
+                <a href="<?= url('nutrition') ?>" class="mt-sm w-full py-1 bg-primary-container text-on-primary-container font-label-caps text-[10px] rounded-full shadow-sm active:scale-95 transition-all flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[14px]">add</span>LOG MEAL</a>
             </div>
 
             <!-- Water -->
@@ -104,7 +104,7 @@ require __DIR__ . '/partials/header.php';
                     <p class="font-headline-md text-headline-md"><?= $waterCurrent ?>L</p>
                     <p class="font-body-sm text-on-surface-variant">Goal: <?= $waterGoal ?>L</p>
                 </div>
-                <button class="mt-sm w-full py-1 bg-primary-container text-on-primary-container font-label-caps text-[10px] rounded-full shadow-sm active:scale-95 transition-all flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[14px]">add</span>LOG</button>
+                <a href="<?= url('water') ?>" class="mt-sm w-full py-1 bg-primary-container text-on-primary-container font-label-caps text-[10px] rounded-full shadow-sm active:scale-95 transition-all flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[14px]">add</span>LOG WATER</a>
             </div>
         </section>
 
@@ -144,17 +144,4 @@ require __DIR__ . '/partials/header.php';
                 <?php endforeach; ?>
             </div>
         </section>
-
-        <!-- Quick Actions -->
-        <section class="grid grid-cols-2 gap-sm">
-            <a href="<?= url('water') ?>" class="flex items-center justify-center gap-base py-sm bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded-full shadow-md active:scale-95 transition-all">
-                <span class="material-symbols-outlined text-[20px]">water_drop</span>
-                LOG WATER
-            </a>
-            <a href="<?= url('nutrition') ?>" class="flex items-center justify-center gap-base py-sm border-2 border-primary text-primary font-label-caps text-label-caps rounded-full active:scale-95 transition-all">
-                <span class="material-symbols-outlined text-[20px]">restaurant_menu</span>
-                LOG MEAL
-            </a>
-        </section>
-
 <?php require __DIR__ . '/partials/footer.php'; ?>

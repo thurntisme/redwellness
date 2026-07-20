@@ -1,12 +1,5 @@
 <?php
-$profileImage = 'https://lh3.googleusercontent.com/aida-public/AB6AXuC89b6J_Xv86JuaDM4l4p-QkVnDYxE3v-4mfpwpskZxua-rIG3-Dtp98Ig2BqkkzFETMRB_d545lojAQhwFKk7Xw1JHhhuXHRPZbJlCD3WyrIfZEa7vWcudEnzaiafuOLqvA796AM_Sgh4EKBjCG-TlUQHyxopSAsrwUN3vQBvu9hfD3KSBjzSAdC2NTsClw3kHqCg90JuNvcGb-lx-GhezPcxbZyWe5QNBu-T-g_2RgBF9cPBbwfDX';
-
-$hydrationGoal = 2.5;
-$waterLogs = [
-    ['amount' => 500, 'label' => 'Glass of Water', 'time' => '09:15 AM', 'icon' => 'local_drink'],
-    ['amount' => 250, 'label' => 'Quick Sip', 'time' => '08:02 AM', 'icon' => 'local_drink'],
-    ['amount' => 750, 'label' => 'Post-Workout', 'time' => '07:30 AM', 'icon' => 'fitness_center'],
-];
+$hydrationGoal = $_SESSION['water_goal'] ?? 2.5;
 
 require __DIR__ . '/partials/header.php';
 ?>
@@ -76,25 +69,6 @@ require __DIR__ . '/partials/header.php';
                 <button class="text-primary font-label-caps text-label-caps">VIEW ALL</button>
             </div>
             <div id="water-log-container" class="space-y-base">
-                <?php foreach ($waterLogs as $log): ?>
-                <div class="flex items-center justify-between p-sm bg-surface-container-lowest border border-outline-variant/30 rounded-xl">
-                    <div class="flex items-center gap-sm">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-primary"><?= $log['icon'] ?></span>
-                        </div>
-                        <div>
-                            <p class="font-body-lg font-bold text-on-surface"><?= $log['amount'] ?>ml</p>
-                            <p class="font-body-sm text-secondary"><?= htmlspecialchars($log['label']) ?></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-xs">
-                        <p class="font-label-caps text-label-caps text-secondary-fixed-dim"><?= $log['time'] ?></p>
-                        <button onclick="confirmDelete(this, <?= $log['amount'] ?>)" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-error hover:bg-error-container/30 transition-colors active:scale-90">
-                            <span class="material-symbols-outlined text-[18px]">delete</span>
-                        </button>
-                    </div>
-                </div>
-                <?php endforeach; ?>
             </div>
         </section>
     </main>
@@ -154,115 +128,7 @@ require __DIR__ . '/partials/header.php';
 
 <?php require __DIR__ . '/partials/footer.php'; ?>
 
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const GOAL = <?= $hydrationGoal ?>;
-            const currentLiters = 1.8;
-            let totalMl = currentLiters * 1000;
-            const circumference = 691;
-
-            const litersEl = document.getElementById('current-liters');
-            const msgEl = document.getElementById('hydration-msg');
-            const logContainer = document.getElementById('water-log-container');
-            const ring = document.querySelector('.progress-ring-circle');
-
-            function updateProgress() {
-                const liters = totalMl / 1000;
-                const percent = Math.min(100, Math.round((liters / GOAL) * 100));
-                litersEl.textContent = liters.toFixed(1);
-                msgEl.textContent = percent >= 100
-                    ? 'You hit your goal! Great job staying hydrated!'
-                    : `You're ${percent}% hydrated today. Keep pushing!`;
-                const offset = Math.max(0, circumference - (percent / 100 * circumference));
-                ring.style.strokeDashoffset = offset;
-            }
-
-            window.logWater = function (amount, label) {
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                totalMl += amount;
-                const displayLabel = label || 'Manual Entry';
-
-                const newItem = document.createElement('div');
-                newItem.className = 'flex items-center justify-between p-sm bg-surface-container-lowest border border-outline-variant/30 rounded-xl opacity-0 translate-y-4 transition-all duration-300';
-                newItem.innerHTML = `
-                    <div class="flex items-center gap-sm">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-primary">local_drink</span>
-                        </div>
-                        <div>
-                            <p class="font-body-lg font-bold text-on-surface">${amount}ml</p>
-                            <p class="font-body-sm text-secondary">${displayLabel}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-xs">
-                        <p class="font-label-caps text-label-caps text-secondary-fixed-dim">${timeStr}</p>
-                        <button onclick="confirmDelete(this, ${amount})" class="w-8 h-8 rounded-full flex items-center justify-center text-secondary hover:text-error hover:bg-error-container/30 transition-colors active:scale-90">
-                            <span class="material-symbols-outlined text-[18px]">delete</span>
-                        </button>
-                    </div>
-                `;
-                logContainer.prepend(newItem);
-                setTimeout(() => newItem.classList.remove('opacity-0', 'translate-y-4'), 10);
-
-                updateProgress();
-            };
-
-            window.openCustomVolumeModal = function () {
-                const modal = document.getElementById('custom-volume-modal');
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            };
-
-            window.closeCustomVolumeModal = function () {
-                const modal = document.getElementById('custom-volume-modal');
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            };
-
-            window.confirmCustomVolume = function () {
-                const input = document.getElementById('custom-ml');
-                const descInput = document.getElementById('custom-desc');
-                const amount = parseInt(input.value);
-                const label = descInput.value.trim();
-                if (amount > 0) {
-                    logWater(amount, label);
-                    input.value = '300';
-                    descInput.value = '';
-                    closeCustomVolumeModal();
-                }
-            };
-
-            let pendingDeleteBtn = null;
-            let pendingDeleteAmount = 0;
-
-            window.confirmDelete = function (btn, amount) {
-                pendingDeleteBtn = btn.closest('.flex.items-center.justify-between');
-                pendingDeleteAmount = amount;
-                document.getElementById('delete-modal-desc').textContent = `This will remove ${amount}ml and adjust your progress.`;
-                const modal = document.getElementById('confirm-delete-modal');
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            };
-
-            window.closeConfirmDelete = function () {
-                const modal = document.getElementById('confirm-delete-modal');
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                pendingDeleteBtn = null;
-                pendingDeleteAmount = 0;
-            };
-
-            window.executeDelete = function () {
-                if (pendingDeleteBtn) {
-                    totalMl = Math.max(0, totalMl - pendingDeleteAmount);
-                    pendingDeleteBtn.style.transition = 'opacity 0.2s, transform 0.2s';
-                    pendingDeleteBtn.style.opacity = '0';
-                    pendingDeleteBtn.style.transform = 'translateX(20px)';
-                    setTimeout(() => pendingDeleteBtn.remove(), 200);
-                    updateProgress();
-                }
-                closeConfirmDelete();
-            };
-        });
-    </script>
+    <script src="/assets/js/validate.js"></script>
+    <script src="/assets/js/request.js"></script>
+    <script src="/assets/js/user.js"></script>
+    <script src="/assets/js/pages/water.js"></script>

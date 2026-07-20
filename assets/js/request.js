@@ -28,6 +28,18 @@ const Request = {
     }
   },
 
+  async del(url) {
+    try {
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      });
+      return this.handleResponse(res);
+    } catch (err) {
+      return { success: false, message: 'Network error. Please try again.' };
+    }
+  },
+
   async handleResponse(res) {
     const contentType = res.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
