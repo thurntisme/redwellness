@@ -119,9 +119,37 @@
             </div>
             <span class="font-display-metrics text-headline-lg-mobile text-primary">RedWellness</span>
         </div>
-        <button class="text-primary active:scale-95 transition-transform duration-150">
-            <span class="material-symbols-outlined">calendar_today</span>
+        <button id="logoutBtn" class="text-primary active:scale-95 transition-transform duration-150" onclick="document.getElementById('logoutModal').classList.remove('hidden')">
+            <span class="material-symbols-outlined">logout</span>
         </button>
+    </header>
+
+    <!-- Logout Confirm Modal -->
+    <div id="logoutModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" onclick="if(event.target===this)this.classList.add('hidden')">
+        <div class="bg-surface-container-lowest rounded-2xl p-md max-w-xs w-full mx-4 shadow-xl border border-surface-variant" onclick="event.stopPropagation()">
+            <div class="flex flex-col items-center text-center gap-sm">
+                <div class="w-12 h-12 rounded-full bg-error-container flex items-center justify-center">
+                    <span class="material-symbols-outlined text-error" style="font-variation-settings:'FILL' 1;">logout</span>
+                </div>
+                <h2 class="font-headline-md text-headline-md">Sign out</h2>
+                <p class="font-body-sm text-on-surface-variant">Are you sure you want to sign out of your account?</p>
+                <div class="flex gap-sm w-full mt-xs">
+                    <button class="flex-1 h-11 border border-outline-variant/50 rounded-full font-label-caps text-label-caps active:scale-95 transition-all" onclick="document.getElementById('logoutModal').classList.add('hidden')">Cancel</button>
+                    <button id="confirmLogoutBtn" class="flex-1 h-11 bg-error text-on-error rounded-full font-label-caps text-label-caps active:scale-95 transition-all flex items-center justify-center gap-1">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('confirmLogoutBtn').addEventListener('click', function() {
+            User.clear();
+            fetch('/ajax/logout', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+                .finally(function() {
+                    window.location.href = '/login';
+                });
+        });
+    </script>
     </header>
 
     <script>
