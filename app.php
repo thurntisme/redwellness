@@ -1,8 +1,7 @@
 <?php
-// Dashboard data
+$userId = $_SESSION['user_id'] ?? 0;
 $userName = $_SESSION['user_name'] ?? 'Guest';
 
-// Date/time
 $date = date('l, F j');
 $hour = (int)date('G');
 if ($hour < 12) {
@@ -13,41 +12,89 @@ if ($hour < 12) {
     $greeting = 'Good evening';
 }
 
-// Nutrition
-$caloriesLeft = 1200;
-$caloriesGoal = 2400;
-$caloriesPercent = round(($caloriesGoal - $caloriesLeft) / $caloriesGoal * 100);
+// ── Nutrition ──────────────────────────────────────────────────────────
+$caloriesConsumed = 0;
+$calorieGoal = 2500;
+$proteinGoal = 150;
+$carbsGoal = 250;
+$fatsGoal = 65;
 
-// Water
-$waterCurrent = 1.5;
+if ($userId) {
+    $nutStmt = $pdo->prepare("SELECT COALESCE(SUM(calories),0) as total_calories, COALESCE(SUM(protein),0) as total_protein, COALESCE(SUM(carbs),0) as total_carbs, COALESCE(SUM(fats),0) as total_fats FROM nutrition_logs WHERE user_id = ? AND date(logged_at) = date('now')");
+    $nutStmt->execute([$userId]);
+    $nutrition = $nutStmt->fetch();
+
+    $goalStmt = $pdo->prepare("SELECT calorie_goal, protein_goal, carbs_goal, fats_goal FROM user_nutrition_goals WHERE user_id = ?");
+    $goalStmt->execute([$userId]);
+    $goals = $goalStmt->fetch();
+    if ($goals) {
+        $calorieGoal = (int) $goals['calorie_goal'];
+        $proteinGoal = (int) $goals['protein_goal'];
+        $carbsGoal = (int) $goals['carbs_goal'];
+        $fatsGoal = (int) $goals['fats_goal'];
+    }
+
+    $caloriesConsumed = (int) $nutrition['total_calories'];
+}
+$caloriesLeft = max(0, $calorieGoal - $caloriesConsumed);
+$caloriesPercent = $calorieGoal > 0 ? round($caloriesConsumed / $calorieGoal * 100) : 0;
+
+// ── Water ──────────────────────────────────────────────────────────────
 $waterGoal = 2.5;
-$waterPercent = round($waterCurrent / $waterGoal * 100);
+$waterCurrent = 0;
+if ($userId) {
+    $waterStmt = $pdo->prepare("SELECT COALESCE(SUM(amount),0) as total_ml FROM water_logs WHERE user_id = ? AND date(logged_at) = date('now')");
+    $waterStmt->execute([$userId]);
+    $waterData = $waterStmt->fetch();
+    $waterCurrent = round((int) $waterData['total_ml'] / 1000, 1);
+}
+$waterPercent = $waterGoal > 0 ? round($waterCurrent / $waterGoal * 100) : 0;
 
-// Workouts
-$workouts = [
-    [
-        'name' => 'Morning Mobility Flow',
-        'time' => '08:30 AM',
-        'duration' => '20 MIN',
-        'level' => 'Beginner',
-        'status' => 'completed',
-        'image' => 'https://lh3.googleusercontent.com/aida-public/AB6AXuA_47CEbP-toT2bNRr1rzlW8qqBomx5xJQiIy-MvHxBfclhFRrJfS6tpmqnnwobtw8dsRvA2h_wVpsgDU2T-sYZ1_BYNsE6QtcmO5--fD60D1ya493EaAD54T2F4nZI5FspV-mKgPdcjoqt8z1b5bAdlUcEgVYc__VQ4u5KB5lTzmtPA08jXYa67JnGxv1f-t2YUIz7qnd_ICfWQ_-sYdrVWvJr6m-p9ueXmzfsQEdVgTSylkc4Vd19',
-    ],
-    [
-        'name' => 'Strength Training',
-        'time' => '05:00 PM',
-        'duration' => '45 MIN',
-        'level' => 'Intermediate',
-        'status' => 'pending',
-        'image' => 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop',
-    ],
-];
+// ── Today's Exercises ──────────────────────────────────────────────────
+$dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+$todayDay = $dayNames[(int)date('w')];
 
-// Chart data
-$chartDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-$chartNutrition = [2100, 2300, 2500, 2000, 1800, 2100, 2200];
-$chartWater = [2.2, 2.5, 3.0, 3.5, 3.2, 3.0, 3.1];
-$chartWorkout = [45, 0, 60, 30, 75, 20, 50];
+$todayExercises = [];
+$loggedIds = [];
+if ($userId) {
+    $planStmt = $pdo->prepare("
+        SELECT w.id, w.exercise_id, w.sets, w.reps, e.name, e.category
+        FROM workouts w
+        JOIN exercises e ON e.id = w.exercise_id
+        WHERE w.user_id = ? AND w.day_of_week = ? AND w.is_morning_routine = 0
+        ORDER BY w.id
+    ");
+    $planStmt->execute([$userId, $todayDay]);
+    $todayExercises = $planStmt->fetchAll();
+
+    $logStmt = $pdo->prepare("SELECT exercise_id FROM workout_logs WHERE user_id = ? AND date(logged_at) = date('now')");
+    $logStmt->execute([$userId]);
+    $loggedIds = $logStmt->fetchAll(PDO::FETCH_COLUMN);
+}
+$loggedSet = array_flip($loggedIds);
+
+// ── Chart Data ─────────────────────────────────────────────────────────
+$chartDays = [];
+$chartNutrition = [];
+$chartWater = [];
+$chartWorkout = [];
+
+for ($i = 6; $i >= 0; $i--) {
+    $d = date('Y-m-d', strtotime("-{$i} days"));
+    $chartDays[] = date('D', strtotime($d));
+
+    $nutStmt = $pdo->prepare("SELECT COALESCE(SUM(calories),0) FROM nutrition_logs WHERE user_id = ? AND date(logged_at) = ?");
+    $nutStmt->execute([$userId, $d]);
+    $chartNutrition[] = (int) $nutStmt->fetchColumn();
+
+    $waterStmt = $pdo->prepare("SELECT COALESCE(SUM(amount),0) FROM water_logs WHERE user_id = ? AND date(logged_at) = ?");
+    $waterStmt->execute([$userId, $d]);
+    $chartWater[] = round((int) $waterStmt->fetchColumn() / 1000, 1);
+
+    $workStmt = $pdo->prepare("SELECT COALESCE(SUM(duration_minutes),0) FROM workout_logs WHERE user_id = ? AND date(logged_at) = ?");
+    $workStmt->execute([$userId, $d]);
+    $chartWorkout[] = (int) $workStmt->fetchColumn();
+}
 
 require __DIR__ . '/partials/header.php';
 ?>
@@ -76,7 +123,7 @@ require __DIR__ . '/partials/header.php';
                     <div class="relative w-20 h-20 mb-sm">
                         <svg class="w-full h-full">
                             <circle class="text-tertiary/10" cx="40" cy="40" fill="transparent" r="32" stroke="currentColor" stroke-width="8"></circle>
-                            <circle class="text-tertiary progress-ring-circle" cx="40" cy="40" fill="transparent" r="32" stroke="currentColor" stroke-dasharray="201" stroke-dashoffset="80.4" stroke-linecap="round" stroke-width="8"></circle>
+                            <circle id="nut-ring" class="text-tertiary progress-ring-circle" cx="40" cy="40" fill="transparent" r="32" stroke="currentColor" stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round" stroke-width="8"></circle>
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <p class="font-label-caps text-label-caps"><?= $caloriesPercent ?>%</p>
@@ -95,7 +142,7 @@ require __DIR__ . '/partials/header.php';
                     <div class="relative w-20 h-20 mb-sm">
                         <svg class="w-full h-full">
                             <circle class="text-primary-container/20" cx="40" cy="40" fill="transparent" r="32" stroke="currentColor" stroke-width="8"></circle>
-                            <circle class="text-primary-container progress-ring-circle" cx="40" cy="40" fill="transparent" r="32" stroke="currentColor" stroke-dasharray="201" stroke-dashoffset="120.6" stroke-linecap="round" stroke-width="8"></circle>
+                            <circle id="water-ring" class="text-primary-container progress-ring-circle" cx="40" cy="40" fill="transparent" r="32" stroke="currentColor" stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round" stroke-width="8"></circle>
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">water_drop</span>
@@ -108,7 +155,8 @@ require __DIR__ . '/partials/header.php';
             </div>
         </section>
 
-        <!-- Next Up Routine -->
+        <!-- Today's Exercises -->
+        <?php if ($todayExercises): ?>
         <section class="mb-lg">
             <div class="bg-primary-container text-on-primary-container p-sm rounded-xl mb-sm shadow-sm flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -118,30 +166,107 @@ require __DIR__ . '/partials/header.php';
                 <span class="material-symbols-outlined opacity-80">info</span>
             </div>
             <div class="flex flex-col gap-sm">
-                <?php foreach ($workouts as $workout): ?>
-                <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-sm flex items-center gap-sm transition-transform active:scale-[0.98] cursor-pointer <?= $workout['status'] === 'completed' ? 'opacity-80' : '' ?>">
+                <?php foreach ($todayExercises as $ex): $completed = isset($loggedSet[$ex['exercise_id']]); ?>
+                <a href="<?= url('exercise') ?>?id=<?= $ex['exercise_id'] ?>" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-sm flex items-center gap-sm transition-transform active:scale-[0.98] <?= $completed ? 'opacity-80' : '' ?> no-underline text-on-surface">
                     <div class="relative w-16 h-16 rounded-lg bg-surface-container flex items-center justify-center shrink-0 overflow-hidden">
-                        <img class="w-full h-full object-cover" src="<?= htmlspecialchars($workout['image']) ?>" alt="<?= htmlspecialchars($workout['name']) ?>">
-                        <?php if ($workout['status'] === 'completed'): ?>
+                        <span class="material-symbols-outlined text-primary text-[28px]">fitness_center</span>
+                        <?php if ($completed): ?>
                         <div class="absolute inset-0 bg-tertiary/20 flex items-center justify-center">
                             <span class="material-symbols-outlined text-on-tertiary bg-tertiary rounded-full p-0.5 text-[16px]">check</span>
                         </div>
                         <?php endif; ?>
                     </div>
-                    <div class="flex-1">
-                        <p class="font-label-caps text-label-caps <?= $workout['status'] === 'completed' ? 'text-tertiary' : 'text-primary' ?>"><?= htmlspecialchars($workout['time']) ?> &bull; <?= htmlspecialchars($workout['duration']) ?><?= $workout['status'] === 'completed' ? ' &bull; COMPLETED' : '' ?></p>
-                        <h4 class="font-headline-md text-headline-md leading-tight <?= $workout['status'] === 'completed' ? 'line-through text-secondary' : '' ?>"><?= htmlspecialchars($workout['name']) ?></h4>
-                        <p class="font-body-sm text-on-surface-variant">Level: <?= htmlspecialchars($workout['level']) ?></p>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-label-caps text-label-caps <?= $completed ? 'text-tertiary' : 'text-primary' ?>"><?= htmlspecialchars($ex['category'] ?? 'General') ?> &bull; <?= $ex['sets'] ?> Sets &bull; <?= $ex['reps'] ?> Reps<?= $completed ? ' &bull; COMPLETED' : '' ?></p>
+                        <h4 class="font-headline-md text-headline-md leading-tight truncate <?= $completed ? 'line-through text-secondary' : '' ?>"><?= htmlspecialchars($ex['name']) ?></h4>
                     </div>
-                    <?php if ($workout['status'] === 'completed'): ?>
+                    <?php if ($completed): ?>
                     <span class="material-symbols-outlined text-outline">chevron_right</span>
                     <?php else: ?>
                     <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
                         <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
                     </div>
                     <?php endif; ?>
-                </div>
+                </a>
                 <?php endforeach; ?>
             </div>
         </section>
+        <?php endif; ?>
+
 <?php require __DIR__ . '/partials/footer.php'; ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // ── Rings ──────────────────────────────────────────
+            ['nut-ring', 'water-ring'].forEach(function (id) {
+                var circle = document.getElementById(id);
+                if (!circle) return;
+                var radius = circle.r.baseVal.value;
+                var circumference = radius * 2 * Math.PI;
+                circle.style.strokeDasharray = circumference + ' ' + circumference;
+            });
+
+            var nutCircle = document.getElementById('nut-ring');
+            if (nutCircle) {
+                var radius = nutCircle.r.baseVal.value;
+                var circumference = radius * 2 * Math.PI;
+                var offset = circumference - (<?= $caloriesPercent ?> / 100 * circumference);
+                setTimeout(function () { nutCircle.style.strokeDashoffset = offset; }, 300);
+            }
+
+            var waterCircle = document.getElementById('water-ring');
+            if (waterCircle) {
+                var radius = waterCircle.r.baseVal.value;
+                var circumference = radius * 2 * Math.PI;
+                var offset = circumference - (<?= $waterPercent ?> / 100 * circumference);
+                setTimeout(function () { waterCircle.style.strokeDashoffset = offset; }, 300);
+            }
+
+            // ── Chart ──────────────────────────────────────────
+            var ctx = document.getElementById('progressChart');
+            if (!ctx) return;
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: <?= json_encode($chartDays) ?>,
+                    datasets: [
+                        {
+                            label: 'Calories',
+                            data: <?= json_encode($chartNutrition) ?>,
+                            borderColor: '#b71422',
+                            backgroundColor: 'rgba(183,20,34,0.1)',
+                            tension: 0.3,
+                            pointRadius: 3,
+                        },
+                        {
+                            label: 'Water (L)',
+                            data: <?= json_encode($chartWater) ?>,
+                            borderColor: '#006764',
+                            backgroundColor: 'rgba(0,103,100,0.1)',
+                            tension: 0.3,
+                            pointRadius: 3,
+                        },
+                        {
+                            label: 'Workout (min)',
+                            data: <?= json_encode($chartWorkout) ?>,
+                            borderColor: '#b7841a',
+                            backgroundColor: 'rgba(183,132,26,0.1)',
+                            tension: 0.3,
+                            pointRadius: 3,
+                        },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } },
+                    },
+                },
+            });
+        });
+    </script>
