@@ -135,7 +135,7 @@ require __DIR__ . '/partials/header.php';
             <p class="font-body-sm text-body-sm text-on-surface-variant mb-sm"><?= htmlspecialchars($today) ?></p>
 
             <?php foreach ($exercises as $exercise): ?>
-            <a href="exercise.php" class="exercise-card <?= $exercise['status'] === 'completed' ? 'completed' : '' ?> bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm no-underline text-on-surface">
+            <a href="<?= url('exercise') ?>" class="exercise-card <?= $exercise['status'] === 'completed' ? 'completed' : '' ?> bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm no-underline text-on-surface">
                 <div class="w-14 h-14 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 relative">
                     <img class="w-full h-full object-cover" src="<?= htmlspecialchars($exercise['image']) ?>" alt="<?= htmlspecialchars($exercise['name']) ?>">
                     <?php if ($exercise['status'] === 'completed'): ?>

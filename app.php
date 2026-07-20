@@ -148,11 +148,11 @@ require __DIR__ . '/partials/header.php';
 
         <!-- Quick Actions -->
         <section class="grid grid-cols-2 gap-sm">
-            <a href="water.php" class="flex items-center justify-center gap-base py-sm bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded-full shadow-md active:scale-95 transition-all">
+            <a href="<?= url('water') ?>" class="flex items-center justify-center gap-base py-sm bg-primary-container text-on-primary-container font-label-caps text-label-caps rounded-full shadow-md active:scale-95 transition-all">
                 <span class="material-symbols-outlined text-[20px]">water_drop</span>
                 LOG WATER
             </a>
-            <a href="nutrition.php" class="flex items-center justify-center gap-base py-sm border-2 border-primary text-primary font-label-caps text-label-caps rounded-full active:scale-95 transition-all">
+            <a href="<?= url('nutrition') ?>" class="flex items-center justify-center gap-base py-sm border-2 border-primary text-primary font-label-caps text-label-caps rounded-full active:scale-95 transition-all">
                 <span class="material-symbols-outlined text-[20px]">restaurant_menu</span>
                 LOG MEAL
             </a>

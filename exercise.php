@@ -23,7 +23,7 @@ require __DIR__ . '/partials/header.php';
 ?>
 <!-- Override top app bar for exercise detail -->
 <header class="fixed top-0 left-1/2 -translate-x-1/2 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm h-14 flex justify-between items-center px-container-margin max-w-lg mx-auto">
-    <a href="workout.php" class="active:scale-95 transition-transform p-1">
+    <a href="<?= url('workout') ?>" class="active:scale-95 transition-transform p-1">
         <span class="material-symbols-outlined text-primary">arrow_back</span>
     </a>
     <h1 class="font-headline-lg-mobile text-headline-lg-mobile font-display-metrics text-primary"><?= htmlspecialchars($exerciseName) ?></h1>

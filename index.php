@@ -14,7 +14,7 @@
             RedWellness is a comprehensive web app that helps you monitor nutrition, hydration, workouts, and daily wellness habits — all in one beautiful dashboard.
         </p>
         <div class="flex justify-center gap-sm">
-            <a href="app.php" class="px-8 py-3 rounded-full bg-primary text-white font-headline-md shadow-lg active:scale-95 transition-all hover:opacity-90">
+            <a href="<?= url('app') ?>" class="px-8 py-3 rounded-full bg-primary text-white font-headline-md shadow-lg active:scale-95 transition-all hover:opacity-90">
                 Get Started
             </a>
             <a href="#features" class="px-8 py-3 rounded-full border-2 border-outline text-on-surface font-headline-md active:scale-95 transition-all hover:bg-surface-container-low">
@@ -86,7 +86,7 @@
         <div class="max-w-3xl mx-auto bg-primary-container rounded-2xl p-xl text-center text-on-primary-container">
             <h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-sm">Ready to start your wellness journey?</h2>
             <p class="font-body-lg opacity-90 mb-lg max-w-md mx-auto">Join RedWellness today and take the first step towards a healthier, more disciplined life.</p>
-            <a href="app.php" class="inline-block px-10 py-4 rounded-full bg-white text-primary font-headline-md shadow-lg active:scale-95 transition-all hover:opacity-90">
+            <a href="<?= url('app') ?>" class="inline-block px-10 py-4 rounded-full bg-white text-primary font-headline-md shadow-lg active:scale-95 transition-all hover:opacity-90">
                 Get Started Free
             </a>
         </div>

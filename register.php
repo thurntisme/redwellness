@@ -92,7 +92,7 @@
             <div class="mt-xl text-center">
                 <p class="text-body-sm font-body-sm text-secondary">
                     Already have an account?
-                    <a class="text-primary font-bold hover:underline transition-all" href="login.php">Log In</a>
+                    <a class="text-primary font-bold hover:underline transition-all" href="<?= url('login') ?>">Log In</a>
                 </p>
             </div>
 
@@ -128,7 +128,7 @@
                 btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Welcome!';
                 btn.classList.replace('bg-primary-container', 'bg-tertiary-container');
                 setTimeout(() => {
-                    window.location.href = 'app.php';
+                    window.location.href = '<?= url('app') ?>';
                 }, 1500);
             }, 1500);
         });
