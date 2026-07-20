@@ -100,10 +100,39 @@ require __DIR__ . '/partials/header.php';
 
         <!-- Today's Exercises -->
         <section class="space-y-sm">
-            <div class="mb-sm">
+            <div class="flex justify-between items-center mb-sm">
                 <h3 class="font-headline-md text-headline-md">Today's Exercises</h3>
-                <p class="font-body-sm text-body-sm text-on-surface-variant"><?= htmlspecialchars($today) ?></p>
+                <button onclick="openConfigModal()" class="w-10 h-10 flex items-center justify-center rounded-full border border-outline-variant text-primary hover:bg-surface-container-high transition-colors">
+                    <span class="material-symbols-outlined">tune</span>
+                </button>
             </div>
+
+            <!-- Week Day Selector -->
+            <?php
+            $weekDays = [];
+            $dayOfWeek = (int)date('w');
+            $startOfWeek = date('Y-m-d', strtotime("-{$dayOfWeek} days"));
+            for ($i = 0; $i < 7; $i++) {
+                $date = date('Y-m-d', strtotime("{$startOfWeek} +{$i} days"));
+                $weekDays[] = [
+                    'short' => date('D', strtotime($date)),
+                    'num' => date('j', strtotime($date)),
+                    'month' => date('M', strtotime($date)),
+                    'is_today' => $date === date('Y-m-d'),
+                ];
+            }
+            ?>
+            <div class="grid grid-cols-7 gap-1 mb-sm">
+                <?php foreach ($weekDays as $day): ?>
+                <button onclick="selectDay(this)" class="day-pill flex flex-col items-center justify-center py-2 rounded-xl border transition-all <?= $day['is_today'] ? 'bg-primary/10 text-primary border-primary/30' : 'bg-surface-container-lowest text-secondary border-outline-variant hover:border-primary/50' ?>">
+                    <span class="font-label-caps text-[9px] uppercase <?= $day['is_today'] ? 'text-primary/70' : 'text-secondary' ?>"><?= $day['short'] ?></span>
+                    <span class="font-display-metrics text-[18px] leading-tight <?= $day['is_today'] ? 'text-primary' : 'text-on-surface' ?>"><?= $day['num'] ?></span>
+                    <span class="font-label-caps text-[8px] uppercase <?= $day['is_today'] ? 'text-primary/60' : 'text-secondary/60' ?>"><?= $day['month'] ?></span>
+                </button>
+                <?php endforeach; ?>
+            </div>
+
+            <p class="font-body-sm text-body-sm text-on-surface-variant mb-sm"><?= htmlspecialchars($today) ?></p>
 
             <?php foreach ($exercises as $exercise): ?>
             <a href="exercise.php" class="exercise-card <?= $exercise['status'] === 'completed' ? 'completed' : '' ?> bg-surface-container-lowest border border-outline-variant p-sm rounded-xl flex items-center gap-md group cursor-pointer hover:shadow-sm no-underline text-on-surface">
@@ -130,6 +159,53 @@ require __DIR__ . '/partials/header.php';
             <?php endforeach; ?>
         </section>
 
+    <!-- Config Modal -->
+    <div class="fixed inset-0 z-[100] hidden items-center justify-center p-container-margin" id="config-modal">
+        <div class="absolute inset-0 bg-on-background/60 backdrop-blur-md" onclick="closeConfigModal()"></div>
+        <div class="relative w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden max-h-[80vh] flex flex-col">
+            <div class="p-md border-b border-surface-variant flex justify-between items-center">
+                <h2 class="font-headline-md text-on-surface">Configure Exercises</h2>
+                <button onclick="closeConfigModal()" class="text-secondary hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-md space-y-md overflow-y-auto flex-1">
+                <p class="font-body-sm text-secondary">Add or remove exercises for each day.</p>
+                <?php foreach (['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as $day): ?>
+                <div class="bg-surface-container-low rounded-lg p-sm" id="day-<?= $day ?>">
+                    <p class="font-label-caps text-label-caps text-primary uppercase mb-xs"><?= $day ?></p>
+                    <div class="exercise-tags flex flex-wrap gap-xs mb-xs" id="tags-<?= $day ?>">
+                        <?php
+                        $defaultExercises = ['Barbell Squats', 'Glute Stretch', 'HIIT Sprints'];
+                        $selectedForDay = in_array($day, ['Mon', 'Wed', 'Fri']) ? $defaultExercises : ($day === 'Tue' ? ['Glute Stretch'] : []);
+                        foreach ($selectedForDay as $exName):
+                        ?>
+                        <span class="exercise-tag flex items-center gap-1 bg-primary/10 border border-primary/30 text-primary rounded-full px-3 py-1 text-sm">
+                            <?= htmlspecialchars($exName) ?>
+                            <button onclick="removeExercise(this, '<?= $day ?>')" class="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/40 transition-colors">
+                                <span class="material-symbols-outlined text-[12px] text-primary">close</span>
+                            </button>
+                        </span>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="relative">
+                        <div class="flex gap-xs">
+                            <input type="text" id="input-<?= $day ?>" placeholder="Add exercise..." class="flex-1 h-9 bg-surface-container-lowest border border-outline-variant rounded-lg px-3 font-body-sm focus:ring-2 focus:ring-primary focus:outline-none" oninput="filterSuggestions(this, '<?= $day ?>')" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addExercise('<?= $day ?>'); }" onfocus="filterSuggestions(this, '<?= $day ?>')" onblur="setTimeout(() => hideSuggestions('<?= $day ?>'), 150)">
+                            <button onclick="addExercise('<?= $day ?>')" class="h-9 px-3 rounded-lg bg-primary text-white font-label-caps text-[10px] active:scale-95 transition-transform">ADD</button>
+                        </div>
+                        <div id="suggestions-<?= $day ?>" class="hidden absolute left-0 right-12 mt-1 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto"></div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <div class="p-md bg-surface-container-low border-t border-surface-variant">
+                <button onclick="closeConfigModal()" class="w-full py-2 rounded-full bg-primary text-white font-bold hover:opacity-90 transition-all active:scale-95">
+                    Save Schedule
+                </button>
+            </div>
+        </div>
+    </div>
+
 <?php require __DIR__ . '/partials/footer.php'; ?>
 
     <script>
@@ -141,5 +217,93 @@ require __DIR__ . '/partials/header.php';
             } else {
                 checkIcon.classList.add('hidden');
             }
+        }
+
+        function selectDay(btn) {
+            document.querySelectorAll('.day-pill').forEach(pill => {
+                pill.classList.remove('bg-primary', 'text-white', 'border-primary');
+                pill.classList.add('bg-surface-container-lowest', 'text-secondary', 'border-outline-variant');
+                pill.querySelectorAll('span').forEach(span => {
+                    span.classList.remove('text-white/80', 'text-white', 'text-white/60');
+                    if (span.classList.contains('font-display-metrics')) {
+                        span.classList.add('text-on-surface');
+                    } else if (span.textContent.length <= 3) {
+                        span.classList.add('text-secondary');
+                    } else {
+                        span.classList.add('text-secondary/60');
+                    }
+                });
+            });
+            btn.classList.remove('bg-surface-container-lowest', 'border-outline-variant');
+            btn.classList.add('bg-primary', 'text-white', 'border-primary');
+            btn.querySelectorAll('span').forEach(span => {
+                span.classList.remove('text-secondary', 'text-on-surface', 'text-secondary/60');
+                if (span.classList.contains('font-display-metrics')) {
+                    span.classList.add('text-white');
+                } else if (span.textContent.length <= 3) {
+                    span.classList.add('text-white/80');
+                } else {
+                    span.classList.add('text-white/60');
+                }
+            });
+        }
+
+        function openConfigModal() {
+            const modal = document.getElementById('config-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeConfigModal() {
+            const modal = document.getElementById('config-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function addExercise(day) {
+            const input = document.getElementById(`input-${day}`);
+            const name = input.value.trim();
+            if (!name) return;
+            const tags = document.getElementById(`tags-${day}`);
+            const tag = document.createElement('span');
+            tag.className = 'exercise-tag flex items-center gap-1 bg-primary/10 border border-primary/30 text-primary rounded-full px-3 py-1 text-sm';
+            tag.innerHTML = `${name} <button onclick="removeExercise(this, '${day}')" class="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center hover:bg-primary/40 transition-colors"><span class="material-symbols-outlined text-[12px] text-primary">close</span></button>`;
+            tags.appendChild(tag);
+            input.value = '';
+        }
+
+        function removeExercise(btn, day) {
+            btn.closest('.exercise-tag').remove();
+        }
+
+        const allExercises = <?= json_encode(array_map(fn($e) => $e['name'], $exercises)) ?>;
+
+        function filterSuggestions(input, day) {
+            const query = input.value.trim().toLowerCase();
+            const container = document.getElementById(`suggestions-${day}`);
+            const existing = Array.from(document.querySelectorAll(`#tags-${day} .exercise-tag`)).map(el => el.childNodes[0].textContent.trim());
+            const filtered = allExercises.filter(name => !existing.includes(name) && (query === '' || name.toLowerCase().includes(query)));
+
+            if (filtered.length === 0) {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.innerHTML = filtered.map(name => `
+                <button onmousedown="selectSuggestion('${day}', '${name}')" class="w-full text-left px-3 py-2 font-body-sm text-on-surface hover:bg-primary/5 transition-colors">
+                    ${name}
+                </button>
+            `).join('');
+            container.classList.remove('hidden');
+        }
+
+        function hideSuggestions(day) {
+            document.getElementById(`suggestions-${day}`).classList.add('hidden');
+        }
+
+        function selectSuggestion(day, name) {
+            const input = document.getElementById(`input-${day}`);
+            input.value = name;
+            addExercise(day);
         }
     </script>
