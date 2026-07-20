@@ -5,8 +5,8 @@
 
     <!-- Bottom Navigation Bar -->
     <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-50 grid grid-cols-5 items-center px-4 py-2 pb-safe bg-surface/90 dark:bg-surface-container-low/90 backdrop-blur-md shadow-lg rounded-t-xl border-t border-outline-variant max-w-lg mx-auto">
-        <a class="flex flex-col items-center justify-center <?= $currentPage === 'index.php' ? 'bg-primary-container text-on-primary-container rounded-full px-4 py-1' : 'text-secondary hover:text-primary' ?> active:scale-90 transition-transform duration-200" href="index.php">
-            <span class="material-symbols-outlined" style="font-variation-settings: <?= $currentPage === 'index.php' ? "'FILL' 1" : "'FILL' 0" ?>;">dashboard</span>
+        <a class="flex flex-col items-center justify-center <?= $currentPage === 'app.php' ? 'bg-primary-container text-on-primary-container rounded-full px-4 py-1' : 'text-secondary hover:text-primary' ?> active:scale-90 transition-transform duration-200" href="app.php">
+            <span class="material-symbols-outlined" style="font-variation-settings: <?= $currentPage === 'app.php' ? "'FILL' 1" : "'FILL' 0" ?>;">dashboard</span>
             <span class="font-label-caps text-[10px]">Dashboard</span>
         </a>
         <a class="flex flex-col items-center justify-center <?= $currentPage === 'workout.php' ? 'bg-primary-container text-on-primary-container rounded-full px-4 py-1' : 'text-secondary hover:text-primary' ?> active:scale-90 transition-transform duration-200" href="workout.php">
@@ -27,7 +27,7 @@
         </a>
     </nav>
 
-<?php if ($currentPage === 'index.php'): ?>
+<?php if ($currentPage === 'app.php'): ?>
     <script>
         const ctx = document.getElementById('progressChart').getContext('2d');
         new Chart(ctx, {
